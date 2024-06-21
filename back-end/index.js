@@ -9,7 +9,14 @@ app.get("/",(req,res)=>{
 res.send("hola")
 });
 
-///App listening on port
+
+//import controllers
+const users = require("./routes/users")
+//Routes
+app.use('/users', users);
+
+
+///app listening on port
 app.listen(process.env.PORT || port, ()=>{
 console.log(`Server is running on port: ${process.env.PORT || port}`)
 });
