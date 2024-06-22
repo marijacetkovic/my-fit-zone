@@ -1,7 +1,6 @@
 const express = require('express');
-
-const app = express();
 require('dotenv').config();
+const app = express();
 
 const port = 5000;
 
@@ -11,6 +10,7 @@ res.send("hola")
 
 
 //import controllers
+const db = require("./db/conn"); 
 const users = require("./routes/users")
 //Routes
 app.use('/users', users);
