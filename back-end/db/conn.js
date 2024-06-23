@@ -19,6 +19,8 @@ conn.connect((err) => {
 let dataPool={}
 
 //users
+
+//add new user
 dataPool.addUser=(name,surname,role,email,password)=>{
   return new Promise ((resolve, reject)=>{
     conn.query(`INSERT INTO user (name,surname,role,email,password) VALUES (?,?,?,?,?)`,
@@ -28,7 +30,19 @@ dataPool.addUser=(name,surname,role,email,password)=>{
     })
   })
 }
+//authenticate user
+// encrypted passwords?? 
+dataPool.AuthUser=(email)=>{
+  return new Promise ((resolve, reject)=>{
+    conn.query('SELECT * FROM user WHERE email = ?', email, (err,res)=>{
+      if(err){return reject(err)}
+      return resolve(res)
+    })
+  })
+}
+  
 
+//establish user profiles for non admin users
 dataPool.addUserProfile=(id,height,weight,cal_intake)=>{
   return new Promise ((resolve, reject)=>{
     //bmi calculation???
@@ -39,7 +53,9 @@ dataPool.addUserProfile=(id,height,weight,cal_intake)=>{
     })
   })
 }
+
 //delete user?
+//should be allowed only to delete himself / possibly admin should delete 
 dataPool.deleteUser = (id) => {
   return new Promise((resolve, reject) => {
     conn.query(`DELETE FROM user WHERE id = ?`, [id],
@@ -208,7 +224,7 @@ dataPool.removeFavoriteExercise = (user_id, exercise_id) => {
   });
 };
 
-dataPool.allUserFavoriteExercises = (user_id) => {
+dataPool.getUserFavoriteExercises = (user_id) => {
   return new Promise((resolve, reject) => {
     const query = `
     SELECT Exercise.id, Exercise.name
@@ -269,6 +285,22 @@ dataPool.addEvent=(name,time,location,organization,description)=>{
     })
   })
 }
+
+//get all events 
+dataPool.allEvents = () => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT *
+      FROM Event `,
+      (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );
+  });
+};
+
+
 //remove event 
 
 //FOR ADMINS  - event management - deleting events, displaying signed up users, displaying most active users??
