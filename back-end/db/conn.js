@@ -134,7 +134,7 @@ dataPool.deleteWorkout = (id) => {
 //all workouts for a user
 dataPool.allUserWorkouts = (id) => {
   return new Promise((resolve, reject) => {
-    conn.query(`SELECT id, name FROM Workout WHERE user_id = ?`, [id],
+    conn.query(`SELECT id, name, date FROM Workout WHERE user_id = ?`, [id],
       (err, res) => {
         if (err) {return reject(err);}
         return resolve(res);
@@ -143,10 +143,10 @@ dataPool.allUserWorkouts = (id) => {
 };
 
 //connecting workout and exercise
-dataPool.addWorkoutExercise = (workout_id, exercise_id, sets, reps) => {
+dataPool.addWorkoutExercise = (workout_id, exercise_name, sets, reps, exercise_id, user_id) => {
   return new Promise((resolve, reject) => {
     conn.query(
-      `INSERT INTO WorkoutExercise (workout_id, exercise_id, sets, reps)
+      `INSERT INTO WorkoutExercise (workout_id, exercise_name, sets, reps, exercise_id, user_id)
        VALUES (?, ?, ?, ?)`,
       [workout_id, exercise_id, sets, reps],
       (err, res) => {
@@ -156,9 +156,11 @@ dataPool.addWorkoutExercise = (workout_id, exercise_id, sets, reps) => {
     );
   });
 };
+//get workout details ??
 //retreives exercises that are a part of given workout
 dataPool.getWorkoutExercises = (workout_id) => {
   return new Promise((resolve, reject) => {
+    //i might not even need this join
     conn.query(
       `SELECT * FROM Exercise e
       JOIN WorkoutExercise w on e.id = w.exercise_id

@@ -1,6 +1,6 @@
 const express= require("express")
 const exercise = express.Router();
-const db = require('../db/conn.js')
+const { conn, dataPool } = require('../db/conn.js')
 
 exercise.get('/:id', async (req, res, next)=>{
     //check if users logged in
@@ -18,6 +18,7 @@ exercise.get('/:id', async (req, res, next)=>{
     else{
         try {
             //if not logged in only default exercises
+            //should be regulated with roles not ids
             var queryResult = await dataPool.allExercises(-1); 
             res.json(queryResult);
           } catch (err) {
