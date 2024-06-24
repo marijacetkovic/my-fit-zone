@@ -25,18 +25,19 @@ dataPool.addUser=(name,surname,role,email,password)=>{
   return new Promise ((resolve, reject)=>{
     conn.query(`INSERT INTO user (name,surname,role,email,password) VALUES (?,?,?,?,?)`,
       [name, surname, role, email, password], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
+
 //authenticate user
 // encrypted passwords?? 
 dataPool.AuthUser=(email)=>{
   return new Promise ((resolve, reject)=>{
     conn.query('SELECT * FROM user WHERE email = ?', email, (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
@@ -44,23 +45,32 @@ dataPool.AuthUser=(email)=>{
 
 //establish user profiles for non admin users
 dataPool.addUserProfile=(id,height,weight,cal_intake)=>{
-  return new Promise ((resolve, reject)=>{
-    //bmi calculation???
+  return new Promise ((resolve, reject) => {
     conn.query(`INSERT INTO UserProfile (height,weight,cal_intake,user_id) VALUES (?,?,?,?)`,
       [height, weight, cal_intake, id], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
-
+//update profile needed
+dataPool.updateUserProfile = (id, height, weight, cal_intake) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `UPDATE UserProfile SET height = ?, weight = ?, cal_intake = ? WHERE user_id = ?`,
+      [height, weight, cal_intake, id], (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+}
 //delete user?
 //should be allowed only to delete himself / possibly admin should delete 
 dataPool.deleteUser = (id) => {
   return new Promise((resolve, reject) => {
     conn.query(`DELETE FROM user WHERE id = ?`, [id],
       (err, res) => {
-        if (err) {return reject(err);}
+        if (err) return reject(err);
         return resolve(res);
       });
   });
@@ -74,8 +84,8 @@ dataPool.deleteUser = (id) => {
 dataPool.allUserDiaryEntries=(id)=>{
   return new Promise ((resolve, reject)=>{
     conn.query(`SELECT * FROM DiaryEntry where user_id = ?`,[id],(err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
@@ -89,8 +99,8 @@ dataPool.addDiaryEntry=(duration, cal_burned, cal_consumed, hours_slept, water_i
       hours_slept, water_intake, image, user_id) 
       VALUES (?,?,?,?,?,?,?)`,
       [duration, cal_burned, cal_consumed, hours_slept, water_intake, image, user_id], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
@@ -100,7 +110,7 @@ dataPool.deleteDiaryEntry = (id) => {
   return new Promise((resolve, reject) => {
     conn.query(`DELETE FROM DiaryEntry WHERE id = ?`, [id],
       (err, res) => {
-        if (err) {return reject(err);}
+        if (err) return reject(err);
         return resolve(res);
       });
   });
@@ -114,8 +124,8 @@ dataPool.addWorkout=(id, name, user_id)=>{
     conn.query(`INSERT INTO Workout (id, name, date, user_id) 
       VALUES (?,?,?,?)`,
       [id, name, date, user_id], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
@@ -125,7 +135,7 @@ dataPool.deleteWorkout = (id) => {
   return new Promise((resolve, reject) => {
     conn.query(`DELETE FROM Workout WHERE id = ?`, [id],
       (err, res) => {
-        if (err) {return reject(err);}
+        if (err) return reject(err);
         return resolve(res);
       });
   });
@@ -136,17 +146,17 @@ dataPool.allUserWorkouts = (id) => {
   return new Promise((resolve, reject) => {
     conn.query(`SELECT id, name, date FROM Workout WHERE user_id = ?`, [id],
       (err, res) => {
-        if (err) {return reject(err);}
+        if (err) return reject(err);
         return resolve(res);
       });
   });
 };
 
 //connecting workout and exercise
-dataPool.addWorkoutExercise = (workout_id, exercise_name, sets, reps, exercise_id, user_id) => {
+dataPool.addWorkoutExercise = (workout_id, exercise_name, sets, reps, exercise_id) => {
   return new Promise((resolve, reject) => {
     conn.query(
-      `INSERT INTO WorkoutExercise (workout_id, exercise_name, sets, reps, exercise_id, user_id)
+      `INSERT INTO WorkoutExercise (workout_id, exercise_name, sets, reps, exercise_id)
        VALUES (?, ?, ?, ?)`,
       [workout_id, exercise_id, sets, reps],
       (err, res) => {
@@ -156,6 +166,7 @@ dataPool.addWorkoutExercise = (workout_id, exercise_name, sets, reps, exercise_i
     );
   });
 };
+
 //get workout details ??
 //retreives exercises that are a part of given workout
 dataPool.getWorkoutExercises = (workout_id) => {
@@ -235,9 +246,7 @@ dataPool.getUserFavoriteExercises = (user_id) => {
     WHERE FavoriteExercise.user_id = ?
     `;
     conn.query(query, [user_id], (err, res) => {
-      if (err) {
-        return reject(err);
-      }
+      if (err) return reject(err);
       return resolve(res);
     });
   });
@@ -281,9 +290,9 @@ dataPool.addEvent=(name,time,location,organization,description)=>{
   return new Promise ((resolve, reject)=>{
     //check role - only admins should add events
     conn.query(`INSERT INTO event (name,time,location,organization,description) VALUES (?,?,?,?,?)`,
-      [name, time, location, organization, description], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      [name, time, location, organization, description], (err,res) => {
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
@@ -293,13 +302,11 @@ dataPool.allEvents = () => {
   return new Promise((resolve, reject) => {
     conn.query(
       `SELECT *
-      FROM Event `,
-      (err, res) => {
+      FROM Event `, (err, res) => {
         if (err) return reject(err);
         return resolve(res);
       }
-    );
-  });
+    );});
 };
 
 
@@ -314,8 +321,8 @@ dataPool.addEventSignUp=(eventId, userId)=>{
     //should check capacity of the event 
     conn.query(`INSERT INTO EventSignup (s_event_id,s_user_id) VALUES (?,?)`,
       [eventId, userId], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
@@ -326,8 +333,8 @@ dataPool.removeEventSignUp=(eventId, userId)=>{
     //should check capacity of the event 
     conn.query(`DELETE FROM EventSignup WHERE event_id = ? AND user_id = ?`,
       [eventId, userId], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }

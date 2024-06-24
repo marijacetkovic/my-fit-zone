@@ -3,7 +3,6 @@ const event = express.Router();
 const { conn, dataPool } = require('../db/conn.js')
 
 event.get('/', async (req, res, next) => {
-    //should retreive user id from session
     try{
         var queryResult = await dataPool.allEvents();
         res.json(queryResult);

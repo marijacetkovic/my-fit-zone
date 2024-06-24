@@ -1,6 +1,6 @@
-const express= require("express")
+const express = require("express");
 const exercise = express.Router();
-const { conn, dataPool } = require('../db/conn.js')
+const db = require('../db/conn.js');
 
 exercise.get('/:id', async (req, res, next)=>{
     //check if users logged in
@@ -8,7 +8,7 @@ exercise.get('/:id', async (req, res, next)=>{
     if (logged){
         try {
             //user id if logged in, displays personal exercises as well
-            var queryResult = await dataPool.allExercises(id); 
+            var queryResult = await db.allExercises(id); 
             res.json(queryResult);
           } catch (err) {
             console.log(err);
@@ -19,7 +19,7 @@ exercise.get('/:id', async (req, res, next)=>{
         try {
             //if not logged in only default exercises
             //should be regulated with roles not ids
-            var queryResult = await dataPool.allExercises(-1); 
+            var queryResult = await db.allExercises(-1); 
             res.json(queryResult);
           } catch (err) {
             console.log(err);
@@ -32,16 +32,19 @@ exercise.get('/:id', async (req, res, next)=>{
 exercise.get('/favorite/:id', async (req, res, next) => {
     //should retreive user id from session
     // check if req body is complete
-    if (user_id) {
-        try{
-            var queryResult = await dataPool.getUserFavoriteExercises(id);
-            res.json(queryResult);
-        }
-        catch (err) {
-            console.log('Error favoriting exercise:', err);
-            res.sendStatus(500); 
-        }
+    const user_id = req.session.user_id;
+    if(!user_id){
+        res.sendStatus(401); //unauthorized
     }
+    try{
+        var queryResult = await db.getUserFavoriteExercises(id);
+        res.json(queryResult);
+    }
+    catch (err) {
+        console.log('Error favoriting exercise:', err);
+        res.sendStatus(500); 
+    }
+
 });
 
 exercise.post('/favorite', async (req, res, next) => {
@@ -51,7 +54,7 @@ exercise.post('/favorite', async (req, res, next) => {
     // check if req body is complete
     if (user_id && exercise_id) {
         try{
-            var queryResult = await dataPool.addFavoriteExercise(user_id, exercise_id);
+            var queryResult = await db.addFavoriteExercise(user_id, exercise_id);
             res.json(queryResult);
         }
         catch (err) {
@@ -68,7 +71,7 @@ exercise.delete('/favorite', async (req, res, next) => {
     // check if req body is complete
     if (user_id && exercise_id) {
         try{
-            var queryResult = await dataPool.removeFavoriteExercise(user_id, exercise_id);
+            var queryResult = await db.removeFavoriteExercise(user_id, exercise_id);
             res.json(queryResult);
         }
         catch (err) {
