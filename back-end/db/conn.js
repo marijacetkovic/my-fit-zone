@@ -33,7 +33,7 @@ dataPool.addUser=(name,surname,role,email,password)=>{
 
 //authenticate user
 // encrypted passwords?? 
-dataPool.AuthUser=(email)=>{
+dataPool.authUser=(email)=>{
   return new Promise ((resolve, reject)=>{
     conn.query('SELECT * FROM user WHERE email = ?', email, (err,res)=>{
       if (err) return reject(err);
@@ -41,6 +41,16 @@ dataPool.AuthUser=(email)=>{
     })
   })
 }
+
+dataPool.assignAdmin=(id)=>{
+  return new Promise ((resolve, reject)=>{
+    conn.query('UPDATE user SET role = ? WHERE id = ?', ['admin', id], (err,res)=>{
+      if (err) return reject(err);
+      return resolve(res);
+    })
+  })
+}
+
   
 
 //establish user profiles for non admin users
@@ -64,6 +74,7 @@ dataPool.updateUserProfile = (id, height, weight, cal_intake) => {
       }
     );});
 }
+
 //delete user?
 //should be allowed only to delete himself / possibly admin should delete 
 dataPool.deleteUser = (id) => {
@@ -92,7 +103,6 @@ dataPool.allUserDiaryEntries=(id)=>{
 
 //adds a new user diary entry
 dataPool.addDiaryEntry=(duration, cal_burned, cal_consumed, hours_slept, water_intake, image, user_id)=>{
-  //i think i need multer for uploading images
   //add foreign keys for linking diary entry with activity/event/workout 
   return new Promise ((resolve, reject)=>{
     conn.query(`INSERT INTO DiaryEntry (duration, cal_burned, cal_consumed, 
@@ -106,9 +116,9 @@ dataPool.addDiaryEntry=(duration, cal_burned, cal_consumed, hours_slept, water_i
 }
 
 //delete diary entry
-dataPool.deleteDiaryEntry = (id) => {
+dataPool.deleteDiaryEntry = (id, user_id) => {
   return new Promise((resolve, reject) => {
-    conn.query(`DELETE FROM DiaryEntry WHERE id = ?`, [id],
+    conn.query(`DELETE FROM DiaryEntry WHERE id = ? and user_id = ?`, [id,user_id],
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);

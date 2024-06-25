@@ -44,7 +44,7 @@ entry.post('/', async (req, res) => {
     }
 });
 
-users.delete('/deleteDiaryEntry/:id', async (req, res) => {
+entry.delete('/deleteDiaryEntry/:id', async (req, res) => {
     const user_id = req.session.user_id;
     const entry_id = req.params.id;
   
