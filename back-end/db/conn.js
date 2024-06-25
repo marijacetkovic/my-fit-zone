@@ -100,13 +100,15 @@ dataPool.allUserDiaryEntries=(id)=>{
 }
 
 //adds a new user diary entry
-dataPool.addDiaryEntry=(duration, cal_burned, cal_consumed, hours_slept, water_intake, image, user_id)=>{
+dataPool.addDiaryEntry=(duration, cal_burned, cal_consumed, hours_slept, water_intake, 
+  image, description, workout_id, event_id, user_id)=>{
   //add foreign keys for linking diary entry with activity/event/workout 
   return new Promise ((resolve, reject)=>{
     conn.query(`INSERT INTO DiaryEntry (duration, cal_burned, cal_consumed, 
-      hours_slept, water_intake, image, user_id) 
+      hours_slept, water_intake, image, description, workout_id, event_id, user_id) 
       VALUES (?,?,?,?,?,?,?)`,
-      [duration, cal_burned, cal_consumed, hours_slept, water_intake, image, user_id], (err,res)=>{
+      [duration, cal_burned, cal_consumed, hours_slept, water_intake, image, 
+        description, workout_id, event_id, user_id], (err,res)=>{
       if (err) return reject(err);
       return resolve(res);
     })
@@ -319,6 +321,18 @@ dataPool.allEvents = () => {
     );});
 };
 
+dataPool.getEventById = (id) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT *
+      FROM Event
+      WHERE id = ? `, id, (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+};
+
 
 //remove event 
 
@@ -348,5 +362,21 @@ dataPool.removeEventSignUp=(eventId, userId)=>{
     })
   })
 }
+
+dataPool.getEventsForUser = (userId) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT e.id, e.name
+      FROM Event e
+      JOIN EventSignup es ON e.id = es.s_event_id
+      WHERE es.s_user_id = ?`,
+      [userId],
+      (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );
+  });
+};
 
 module.exports = dataPool;

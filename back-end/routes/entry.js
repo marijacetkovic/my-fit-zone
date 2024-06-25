@@ -7,7 +7,7 @@ entry.get('/', async (req, res, next)=>{
     //should check if users logged in
     const user_id = req.session.user_id;
     if(!user_id){
-        res.sendStatus(401); //unauthorized
+        return res.sendStatus(401); //unauthorized
     }
     try{
         var queryResult = await dataPool.allUserDiaryEntries(user_id);
@@ -21,7 +21,9 @@ entry.get('/', async (req, res, next)=>{
 });
 
 entry.post('/', async (req, res) => {
-    const { duration, cal_burned, cal_consumed, hours_slept, water_intake } = req.body;
+    const { duration, cal_burned, cal_consumed, 
+            hours_slept, water_intake, workout_id, 
+            event_id, description } = req.body;
     const user_id = req.session.user_id;
     const image = null; //handle with multer 
 
@@ -29,11 +31,14 @@ entry.post('/', async (req, res) => {
         console.log("user not logged in");
         return res.sendStatus(401);
     }
-
-    if (duration && cal_burned && cal_consumed && hours_slept && water_intake) {
+    const validEntry = duration && cal_burned && cal_consumed && hours_slept && water_intake;
+    
+    if (validEntry) {
         try {
-        var queryResult = await dataPool.addDiaryEntry(duration, cal_burned, cal_consumed, hours_slept, water_intake, image, user_id);
+        var queryResult = await dataPool.addDiaryEntry(duration, cal_burned, cal_consumed, 
+            hours_slept, water_intake, image, description, workout_id, event_id, user_id);
         res.json(queryResult);
+        res.sendStatus(200);
         } catch (err) {
         console.log(err);
         res.sendStatus(500);

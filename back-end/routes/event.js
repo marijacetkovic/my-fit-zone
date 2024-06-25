@@ -14,14 +14,41 @@ event.get('/', async (req, res, next) => {
     }
 });
 
+event.get('/events/:id', async (req, res) => {
+    const eventId = req.params.id;
+    try {
+      const queryResult = await dataPool.getEventById(eventId);
+    //   if (!event || event.length === 0) {
+    //     return res.sendStatus(404);
+    //   }
+      res.json(queryResult);
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+});
+
+event.get('/my', async (req, res) => {
+    const user_id = req.session.user.user_id;
+
+    if(!user_id){
+        console.log("not logged in");
+        return res.sendStatus(401);
+    }
+
+    try {
+      const queryResult = await dataPool.getEventsForUser(userId);
+      res.json(queryResult); 
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500); 
+    }
+  });
+
 event.post('/', async (req, res, next) => {
     //only admins should post events
-    let name = req.body.name;
-    let time = req.body.time;
-    let location = req.body.location;
-    let organization = req.body.organization;
-    let description = req.body.description;
-    const role = req.session.user.role;
+    const { name, time, location, organization, description } = req.body;
+    const { role } = req.session.user;
 
     if(role !== 'admin'){
         console.log("not allowed");
