@@ -3,10 +3,17 @@ const workout = express.Router();
 const db = require('../db/conn.js');
 
 workout.get('/:id', async (req, res, next) => {
-    //should get user id from session
+    const user_id = req.session.user.user_id;
+
+    if(!user_id){
+        console.log("not logged in");
+        return res.sendStatus(401);
+    }
+
     try{
-        var queryResult = await db.allUserWorkouts(req.params.id);
+        var queryResult = await db.allUserWorkouts(user_id);
         res.json(queryResult);
+        res.sendStatus(200);
     }
     catch(err){
         console.log(err);
@@ -15,10 +22,22 @@ workout.get('/:id', async (req, res, next) => {
 })
 
 workout.delete('/:id', async (req, res, next) => {
+    const user_id = req.session.user.user_id;
+
+    if(!user_id){
+        console.log("not logged in");
+        return res.sendStatus(401);
+    }
+    
     //here id is workout id
     try{
-        var queryResult = await db.deleteWorkout(req.params.id);
+        var queryResult = await db.deleteWorkout(req.params.id, user_id);
+        if (queryResult.affectedRows === 0) {
+            console.log("unsuccessful workout deletion");
+            return res.sendStatus(404); // unsuccessful
+        }
         res.json(queryResult);
+        res.sendStatus(200);
     }
     catch(err){
         console.log(err);
@@ -27,9 +46,17 @@ workout.delete('/:id', async (req, res, next) => {
 })
 
 workout.get('/details/:id', async (req, res, next) => {
+    const user_id = req.session.user.user_id;
+
+    if(!user_id){
+        console.log("not logged in");
+        return res.sendStatus(401);
+    }
+    
     try{
         var queryResult = await db.getWorkoutExercises(req.params.id);
         res.json(queryResult);
+        res.sendStatus(200);
     }
     catch(err){
         console.log(err);

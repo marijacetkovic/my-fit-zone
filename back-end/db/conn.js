@@ -139,9 +139,9 @@ dataPool.addWorkout=(id, name, user_id)=>{
 }
 
 //deleting a workout
-dataPool.deleteWorkout = (id) => {
+dataPool.deleteWorkout = (workout_id, user_id) => {
   return new Promise((resolve, reject) => {
-    conn.query(`DELETE FROM Workout WHERE id = ?`, [id],
+    conn.query(`DELETE FROM Workout WHERE id = ? and user_id = ?`, [workout_idid, user_id],
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);
