@@ -264,9 +264,11 @@ dataPool.allExercises = (user_id) => {
   //user id should be differernt for admin and personal exercises - user id
   return new Promise((resolve, reject) => {
     conn.query(
-      `SELECT Exercise.id, Exercise.name
-      FROM Exercise 
-      WHERE Exercise.user_id IN (-1,?)`,
+      `SELECT e.id, e.name
+      FROM Exercise e
+      INNER JOIN User u ON e.user_id = u.id
+      WHERE e.user_id = ? OR u.role = 'admin'
+      )`,
       [user_id],
       (err, res) => {
         if (err) return reject(err);
