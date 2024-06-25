@@ -51,8 +51,6 @@ dataPool.assignAdmin=(id)=>{
   })
 }
 
-  
-
 //establish user profiles for non admin users
 dataPool.addUserProfile=(id,height,weight,cal_intake)=>{
   return new Promise ((resolve, reject) => {

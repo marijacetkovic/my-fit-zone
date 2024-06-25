@@ -6,6 +6,7 @@ event.get('/', async (req, res, next) => {
     try{
         var queryResult = await dataPool.allEvents();
         res.json(queryResult);
+        res.sendStatus(200);
     }
     catch (err) {
         console.log(err);
@@ -20,11 +21,22 @@ event.post('/', async (req, res, next) => {
     let location = req.body.location;
     let organization = req.body.organization;
     let description = req.body.description;
+    const role = req.session.user.role;
+
+    if(role !== 'admin'){
+        console.log("not allowed");
+        return res.sendStatus(403);
+    }
 
     if (name && time && location && organization){
         try{
             var queryResult = await dataPool.addEvent(name,time,location,organization,description);
+            if (queryResult.affectedRows === 0) {
+                console.log("unsuccessful event insert");
+                return res.sendStatus(404); // unsuccessful
+            }
             res.json(queryResult);
+            res.sendStatus(200);
         }
         catch(err){
             console.log(err);
@@ -33,18 +45,29 @@ event.post('/', async (req, res, next) => {
     }
     else{
         console.log("Incomplete request body.");
+        res.sendStatus(400);
     }
 
 })
 
 event.post('signup', async (req, res, next) => {
-    let user_id = req.body.user_id;
-    let event_id = req.body.event_id;
+    const event_id = req.body.event_id;
+    const user_id = req.session.user.user_id;
 
-    if (user_id && event_id){
+    if(!user_id){
+        console.log("not logged in");
+        return res.sendStatus(401);
+    }
+
+    if (event_id){
         try{
             var queryResult = await dataPool.addEventSignUp(event_id,user_id);
+            if (queryResult.affectedRows === 0) {
+                console.log("unsuccessful sign up");
+                return res.sendStatus(404); // unsuccessful
+            }
             res.json(queryResult);
+            res.sendStatus(200);
         }
         catch(err){
             console.log(err);
@@ -53,17 +76,28 @@ event.post('signup', async (req, res, next) => {
     }
     else{
         console.log("Incomplete request body.");
+        res.sendStatus(400);
     }
 })
 
 event.delete('signup', async (req, res, next) => {
-    let user_id = req.body.user_id;
-    let event_id = req.body.event_id;
+    const event_id = req.body.event_id;
+    const user_id = req.session.user.user_id;
 
-    if (user_id && event_id){
+    if(!user_id){
+        console.log("not logged in");
+        return res.sendStatus(401);
+    }
+
+    if (event_id){
         try{
             var queryResult = await dataPool.removeEventSignUp(event_id,user_id);
+            if (queryResult.affectedRows === 0) {
+                console.log("unsuccessful sign up delete");
+                return res.sendStatus(404); // unsuccessful
+            }
             res.json(queryResult);
+            res.sendStatus(200);
         }
         catch(err){
             console.log(err);
@@ -72,6 +106,7 @@ event.delete('signup', async (req, res, next) => {
     }
     else{
         console.log("Incomplete request body.");
+        res.sendStatus(400);
     }
 })
 
