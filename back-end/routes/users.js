@@ -5,7 +5,10 @@ const db = require('../db/conn.js')
 users.post('/register', async (req, res, next) => {
     const {name, surname, email, password} = req.body;
     const role = 'user'; //superadmin will be hardcoded
-
+    console.log(name)
+    console.log(surname)
+    console.log(email)
+    console.log(password)
     //must check if email alr exists in db
     if(name && surname && email && password) {
         try{
@@ -16,7 +19,7 @@ users.post('/register', async (req, res, next) => {
             }
             res.json(queryResult);
             console.log("successful registration");
-            res.sendStatus(200);
+            //res.sendStatus(200);
         }
         catch(err){
             console.log(err);
@@ -34,12 +37,17 @@ users.post('/login', async (req, res, next) => {
     //encrypt passwords?
     if(email && password){
         try{
-            var queryResult = await db.authUser(email);
-            res.json(queryResult);
+            var queryResult = (await db.authUser(email))[0];
             if(queryResult.password === password){
                 console.log("successful login");
             }
-            req.session.user.user_id = queryResult.id;
+            console.log(req.sessionID)
+            req.session.user = {
+                user_id: queryResult.id,
+                role: queryResult.role 
+            };
+            console.log(req.session)
+            res.json(queryResult);
         }
         catch(err){
             console.log(err);
@@ -47,6 +55,16 @@ users.post('/login', async (req, res, next) => {
     }
     else{
         console.log("Incomplete request body");
+    }
+});
+
+users.get('/session', async (req, res, next) => {
+    try {
+        console.log(req.sessionID)
+        console.log(req.session.user)
+        res.json(req.session)
+    } catch (error) {
+        res.sendStatus(500)
     }
 });
 
@@ -80,21 +98,37 @@ users.put('/assignadmin', async (req, res, next) => {
     }
     
 })
-
-users.post('/createprofile', async (req, res, next) => {
-    //bmi calculation???
-    const {height, weight, cal_intake} = req.body;
-    const bmi = bmi(height, weight);
+users.get('/profile', async (req, res, next) => {
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User not logged in" })
+    }
+    
     const user_id = req.session.user.user_id;
 
-    if(!user_id){
-        console.log("not logged in");
-        return res.sendStatus(401);
+    try{
+        var queryResult = await db.getUserProfile(user_id);
+        res.json(queryResult);
     }
+    catch (err) {
+        console.log('Error favoriting exercise:', err);
+        res.sendStatus(500); 
+    }
+})
+
+users.post('/profile', async (req, res, next) => {
+    //bmi calculation???
+    const {height, weight, cal_intake} = req.body;
+    const bmi = bmiCalc(height, weight);
+    
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User not logged in" })
+    }
+    
+    const user_id = req.session.user.user_id;
 
     if(height && weight){
         try{
-            var queryResult = await db.addUserProfile(id, height, weight, cal_intake);
+            var queryResult = await db.addUserProfile(user_id, height, weight, cal_intake);
             if (queryResult.affectedRows === 0) {
                 console.log("unsuccessful user profile creation");
                 return res.sendStatus(404); // unsuccessful
@@ -113,18 +147,18 @@ users.post('/createprofile', async (req, res, next) => {
 });
 
 
-users.post('/updateprofile', async (req, res, next) => {
+users.put('/profile', async (req, res, next) => {
     const { height, weight, cal_intake } = req.body;
-    const user_id = req.session.user.user_id;
-
-    if (!user_id) {
-        console.log("User not logged in");
-        return res.sendStatus(401);
+    
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User not logged in" })
     }
+    
+    const user_id = req.session.user.user_id;
 
     if (height && weight) {
         try {
-            var queryResult = await dataPool.updateUserProfile(user_id, height, weight, cal_intake);
+            var queryResult = await db.updateUserProfile(user_id, height, weight, cal_intake);
             if (queryResult.affectedRows === 0) {
                 console.log("unsuccessful user profile update");
                 return res.sendStatus(404); // unsuccessful
@@ -142,9 +176,9 @@ users.post('/updateprofile', async (req, res, next) => {
 
 users.post('/logout', async (req, res) => {
     try{
+        //console.log(req.session.user.user_id);
         req.session.destroy();
         console.log("session cleared");
-        console.log(req.session.user_id);
         res.sendStatus(200);
     }
     catch(err){
@@ -153,9 +187,20 @@ users.post('/logout', async (req, res) => {
     }
 });
 
+users.get('/', async (req, res, next)=>{
+    try {
+        var queryResult = await db.allUsers();
+        console.log(queryResult)
+        res.json(queryResult);
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+})
+
 //helper functions
 
-const bmi = (height, weight) => {
+const bmiCalc = (height, weight) => {
     // height in meters, weight in kilograms
     return weight / (height * height);
 }

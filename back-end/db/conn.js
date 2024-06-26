@@ -23,8 +23,17 @@ let dataPool={}
 //add new user
 dataPool.addUser=(name,surname,role,email,password)=>{
   return new Promise ((resolve, reject)=>{
-    conn.query(`INSERT INTO user (name,surname,role,email,password) VALUES (?,?,?,?,?)`,
+    conn.query(`INSERT INTO User (name,surname,role,email,password) VALUES (?,?,?,?,?)`,
       [name, surname, role, email, password], (err,res)=>{
+      if (err) return reject(err);
+      return resolve(res);
+    })
+  })
+}
+
+dataPool.allUsers=()=>{
+  return new Promise ((resolve, reject)=>{
+    conn.query(`SELECT * FROM User`, (err,res)=>{
       if (err) return reject(err);
       return resolve(res);
     })
@@ -35,7 +44,7 @@ dataPool.addUser=(name,surname,role,email,password)=>{
 // encrypted passwords?? 
 dataPool.authUser=(email)=>{
   return new Promise ((resolve, reject)=>{
-    conn.query('SELECT * FROM user WHERE email = ?', email, (err,res)=>{
+    conn.query('SELECT * FROM User WHERE email = ?', email, (err,res)=>{
       if (err) return reject(err);
       return resolve(res);
     })
@@ -44,7 +53,7 @@ dataPool.authUser=(email)=>{
 
 dataPool.assignAdmin=(id)=>{
   return new Promise ((resolve, reject)=>{
-    conn.query('UPDATE user SET role = ? WHERE id = ?', ['admin', id], (err,res)=>{
+    conn.query('UPDATE User SET role = ? WHERE id = ?', ['admin', id], (err,res)=>{
       if (err) return reject(err);
       return resolve(res);
     })
@@ -73,6 +82,16 @@ dataPool.updateUserProfile = (id, height, weight, cal_intake) => {
     );});
 }
 
+dataPool.getUserProfile = (userId) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT * FROM UserProfile WHERE user_id = ?`,
+      [userId], (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+};
 //delete user?
 //should be allowed only to delete himself / possibly admin should delete 
 dataPool.deleteUser = (id) => {
