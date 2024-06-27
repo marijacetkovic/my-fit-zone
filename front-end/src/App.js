@@ -1,25 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import AddEntryView from './AddEntryView';
+import AddExerciseView from './AddExerciseView';
+import AddWorkoutView from './AddWorkoutView';
+import AllExercisesView from './AllExercisesView';
+import AllWorkoutsView from './AllWorkoutsView';
+import DashboardView from './DashboardView';
+import EventView from './EventView';
+import LoginView from './LoginView';
+import SignupView from './SignupView';
+import SingleExerciseView from './SingleExerciseView';
+import SingleWorkoutView from './SingleWorkoutView';
+import UserProfileView from './UserProfileView';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends React.Component{
+
+   QGetView = (state) => {
+    const page = state.CurrentPage;
+  
+    switch(page) {
+      case "home":
+        return <DashboardView />;
+      case "about":
+        return <EventView />;
+      case "addentry":
+        return <AddEntryView />;
+      case "addexercise":
+        return <AddExerciseView />;
+      case "addworkout":
+        return <AddWorkoutView />;
+      case "allexercises":
+        return <AllExercisesView />;
+      case "allworkouts":
+        return <AllWorkoutsView />;
+      case "signup":
+        return <SignupView />;
+      case "login":
+        return <LoginView />;
+      case "singleexercise":
+        return <SingleExerciseView />;
+      case "singleworkout":
+        return <SingleWorkoutView />;
+      case "userprofile":
+        return <UserProfileView />;
+      default:
+        return <DashboardView />;
+    }
+  };
+  
+
+  render(){return}
 }
-
 export default App;
