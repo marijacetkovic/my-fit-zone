@@ -37,24 +37,28 @@ users.post('/login', async (req, res, next) => {
     //encrypt passwords?
     if(email && password){
         try{
-            var queryResult = (await db.authUser(email))[0];
-            if(queryResult.password === password){
-                console.log("successful login");
+            var queryResult = await db.authUser(email);
+            if(queryResult.length>0){
+                var user = queryResult[0];
+                if(user.password === password){
+                    console.log("successful login");
+                    req.session.user = {
+                        user_id: user.id,
+                        role: user.role 
+                    };
+                    console.log(req.session)
+                    res.json(queryResult);
+                }
             }
-            console.log(req.sessionID)
-            req.session.user = {
-                user_id: queryResult.id,
-                role: queryResult.role 
-            };
-            console.log(req.session)
-            res.json(queryResult);
+            else return res.sendStatus(500);
         }
         catch(err){
             console.log(err);
+            return res.sendStatus(500);
         }
     }
     else{
-        console.log("Incomplete request body");
+        return res.status(400).json({ message: "Incomplete request body."});
     }
 });
 
@@ -151,7 +155,7 @@ users.put('/profile', async (req, res, next) => {
     const { height, weight, cal_intake } = req.body;
     
     if (!req.session || !req.session.user) {
-        return res.status(401).json({ message: "User not logged in" })
+        return res.status(401).json({ message: "User is not logged in." })
     }
     
     const user_id = req.session.user.user_id;

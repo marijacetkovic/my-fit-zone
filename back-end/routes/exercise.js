@@ -4,7 +4,10 @@ const db = require('../db/conn.js');
 
 exercise.get('/', async (req, res, next)=>{
     //check if users logged in
-    const user_id = req.session.user.user_id;
+    var user_id;
+    if (req.session || req.session.user) {
+        user_id = req.session.user.user_id;    
+    }
 
     if(!user_id){
         console.log("not logged in");
@@ -31,15 +34,19 @@ exercise.get('/', async (req, res, next)=>{
     }
 })
 
+//post exercise needed
+
 exercise.get('/favorite/:id', async (req, res, next) => {
     //should retreive user id from session
     // check if req body is complete
-    const user_id = req.session.user_id;
-    if(!user_id){
-        res.sendStatus(401); //unauthorized
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User is not logged in." })
     }
+    
+    const user_id = req.session.user.user_id;
+
     try{
-        var queryResult = await db.getUserFavoriteExercises(id);
+        var queryResult = await db.getUserFavoriteExercises(user_id);
         res.json(queryResult);
     }
     catch (err) {
@@ -51,12 +58,12 @@ exercise.get('/favorite/:id', async (req, res, next) => {
 
 exercise.post('/favorite', async (req, res, next) => {
     const exercise_id = req.body.exercise_id;
-    const user_id = req.session.user.user_id;
 
-    if(!user_id){
-        console.log("not logged in");
-        return res.sendStatus(401);
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User is not logged in." })
     }
+    
+    const user_id = req.session.user.user_id;
 
     // check if req body is complete
     if (user_id && exercise_id) {
@@ -78,12 +85,13 @@ exercise.post('/favorite', async (req, res, next) => {
 
 exercise.delete('/favorite', async (req, res, next) => {
     const exercise_id = req.body.exercise_id;
+
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User is not logged in." })
+    }
+    
     const user_id = req.session.user.user_id;
 
-    if(!user_id){
-        console.log("not logged in");
-        return res.sendStatus(401);
-    }
 
     // check if req body is complete
     if (user_id && exercise_id) {

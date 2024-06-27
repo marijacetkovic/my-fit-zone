@@ -317,11 +317,11 @@ dataPool.deleteExercise = (id) => {
 //events
 
 //create new event
-dataPool.addEvent=(name,time,location,organization,description)=>{
+dataPool.addEvent=(name,time,location,organization,description, admin_id)=>{
   return new Promise ((resolve, reject)=>{
     //check role - only admins should add events
-    conn.query(`INSERT INTO event (name,time,location,organization,description) VALUES (?,?,?,?,?)`,
-      [name, time, location, organization, description], (err,res) => {
+    conn.query(`INSERT INTO Event (name,time,location,organization,description,admin_id) VALUES (?,?,?,?,?,?)`,
+      [name, time, location, organization, description, admin], (err,res) => {
       if (err) return reject(err);
       return resolve(res);
     })
@@ -374,7 +374,7 @@ dataPool.addEventSignUp=(eventId, userId)=>{
 dataPool.removeEventSignUp=(eventId, userId)=>{
   return new Promise ((resolve, reject)=>{
     //should check capacity of the event 
-    conn.query(`DELETE FROM EventSignup WHERE event_id = ? AND user_id = ?`,
+    conn.query(`DELETE FROM EventSignup WHERE s_event_id = ? AND s_user_id = ?`,
       [eventId, userId], (err,res)=>{
       if (err) return reject(err);
       return resolve(res);
@@ -389,7 +389,7 @@ dataPool.getEventsForUser = (userId) => {
       FROM Event e
       JOIN EventSignup es ON e.id = es.s_event_id
       WHERE es.s_user_id = ?`,
-      [userId],
+      userId,
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);

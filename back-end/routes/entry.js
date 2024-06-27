@@ -5,14 +5,15 @@ const { conn, dataPool } = require('../db/conn.js')
 //retrieves all diary entries for a user
 entry.get('/', async (req, res, next)=>{
     //should check if users logged in
-    const user_id = req.session.user_id;
-    if(!user_id){
-        return res.sendStatus(401); //unauthorized
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User is not logged in." })
     }
+    
+    const user_id = req.session.user.user_id;
+
     try{
         var queryResult = await dataPool.allUserDiaryEntries(user_id);
         res.json(queryResult);
-        res.sendStatus(200);
     }
     catch(err){
         console.log(err);
@@ -21,27 +22,28 @@ entry.get('/', async (req, res, next)=>{
 });
 
 entry.post('/', async (req, res) => {
+
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User is not logged in." })
+    }
+    
     const { duration, cal_burned, cal_consumed, 
             hours_slept, water_intake, workout_id, 
             event_id, description } = req.body;
-    const user_id = req.session.user_id;
+    const user_id = req.session.user.user_id;
     const image = null; //handle with multer 
 
-    if (!user_id) {
-        console.log("user not logged in");
-        return res.sendStatus(401);
-    }
     const validEntry = duration && cal_burned && cal_consumed && hours_slept && water_intake;
     
     if (validEntry) {
         try {
-        var queryResult = await dataPool.addDiaryEntry(duration, cal_burned, cal_consumed, 
-            hours_slept, water_intake, image, description, workout_id, event_id, user_id);
-        res.json(queryResult);
-        res.sendStatus(200);
-        } catch (err) {
-        console.log(err);
-        res.sendStatus(500);
+            var queryResult = await dataPool.addDiaryEntry(duration, cal_burned, cal_consumed, 
+                hours_slept, water_intake, image, description, workout_id, event_id, user_id);
+            res.json(queryResult);
+        } 
+        catch(err) {
+            console.log(err);
+            res.sendStatus(500);
         }
     } else {
         console.log("Incomplete request body");
@@ -50,18 +52,17 @@ entry.post('/', async (req, res) => {
 });
 
 entry.delete('/deleteDiaryEntry/:id', async (req, res) => {
-    const user_id = req.session.user_id;
     const entry_id = req.params.id;
   
-    if (!user_id) {
-      console.log("user not logged in");
-      return res.sendStatus(401);
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User is not logged in." })
     }
-  
+    
     if (!entry_id) {
-      console.log("provide diary entry");
-      return res.sendStatus(400);
+        return res.status(400).json({ message: "Provide diary entry id." })
     }
+
+    const user_id = req.session.user_id;
   
     try {
       const queryResult = await dataPool.deleteDiaryEntry(entry_id, user_id);
