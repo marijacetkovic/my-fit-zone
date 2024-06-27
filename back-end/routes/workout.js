@@ -2,7 +2,7 @@ const express= require("express");
 const workout = express.Router();
 const db = require('../db/conn.js');
 
-workout.get('/:id', async (req, res, next) => {
+workout.get('/', async (req, res, next) => {
     if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User is not logged in." })
     }
@@ -41,7 +41,7 @@ workout.delete('/:id', async (req, res, next) => {
 })
 
 workout.get('/details/:id', async (req, res, next) => {
-    
+
     if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User is not logged in." })
     }

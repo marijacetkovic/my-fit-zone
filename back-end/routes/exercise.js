@@ -5,7 +5,7 @@ const db = require('../db/conn.js');
 exercise.get('/', async (req, res, next)=>{
     //check if users logged in
     var user_id;
-    if (req.session || req.session.user) {
+    if (req.session && req.session.user) {
         user_id = req.session.user.user_id;    
     }
 
@@ -15,7 +15,6 @@ exercise.get('/', async (req, res, next)=>{
             //if not logged in only default exercises
             var queryResult = await db.allExercises(-1); 
             res.json(queryResult);
-            res.sendStatus(200);
           } catch (err) {
             console.log(err);
             res.sendStatus(500); 
@@ -26,7 +25,6 @@ exercise.get('/', async (req, res, next)=>{
             //user id if logged in, displays personal exercises as well
             var queryResult = await db.allExercises(user_id); 
             res.json(queryResult);
-            res.sendStatus(200);
           } catch (err) {
             console.log(err);
             res.sendStatus(500); 
@@ -34,9 +32,28 @@ exercise.get('/', async (req, res, next)=>{
     }
 })
 
-//post exercise needed
+exercise.post('/', async (req, res) => {
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User is not logged in." })
+    }
+    
+    const user_id = req.session.user.user_id;
+    const { name, video_url, description, category} = req.body;
+  
+    if (!name) {
+      return res.status(400).json({ message: 'Bad request.' });
+    }
+  
+    try {
+      const queryResult = await db.addExercise(name, video_url, description, category, user_id);
+      res.status(200).json(queryResult);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Failed to add exercise' });
+    }
+  });
 
-exercise.get('/favorite/:id', async (req, res, next) => {
+exercise.get('/favorite', async (req, res, next) => {
     //should retreive user id from session
     // check if req body is complete
     if (!req.session || !req.session.user) {
@@ -74,7 +91,6 @@ exercise.post('/favorite', async (req, res, next) => {
                 return res.sendStatus(404); // unsuccessful
             }
             res.json(queryResult);
-            res.sendStatus(200);
         }
         catch (err) {
             console.log('Error favoriting exercise:', err);
@@ -102,7 +118,6 @@ exercise.delete('/favorite', async (req, res, next) => {
                 return res.sendStatus(404); // unsuccessful
             }
             res.json(queryResult);
-            res.sendStatus(200);
         }
         catch (err) {
             console.log('Error favoriting exercise:', err);

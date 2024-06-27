@@ -289,7 +289,7 @@ dataPool.allExercises = (user_id) => {
       FROM Exercise e
       INNER JOIN User u ON e.user_id = u.id
       WHERE e.user_id = ? OR u.role = 'admin'
-      )`,
+     `,
       [user_id],
       (err, res) => {
         if (err) return reject(err);
