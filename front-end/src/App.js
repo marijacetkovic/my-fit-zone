@@ -84,7 +84,7 @@ class App extends React.Component {
               <HomeView />
             ) : 
             (
-              <AllExercisesView />
+              <AllWorkoutsView />
             )}
           </div>
         </div>
