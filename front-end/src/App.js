@@ -20,6 +20,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isHome:false
     }
   } 
 
@@ -66,14 +67,29 @@ class App extends React.Component {
     
   
 
-  render(){ 
+  render() {
     return (
-    <div id="viewer" className="container-fluid">
-      <div className="container">
-         <HomeView />
+      <div id="viewer" className="container-fluid">
+        <div className="row">
+          {/* if not homepage display sidebar */}
+          {!this.state.isHome && (
+            <div className="col-lg-1">
+              <SideBarView />
+            </div>
+          )}
+
+          <div className={this.state.isHome ? "" : "col-lg-10"}>
+            {/* if home display home, else other components */}
+            {this.state.isHome ? (
+              <HomeView />
+            ) : 
+            (
+              <DiaryView />
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-    )
+    );
   }
 }
 

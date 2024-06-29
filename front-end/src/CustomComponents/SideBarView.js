@@ -10,7 +10,7 @@ class SideBarView extends React.Component {
       }
   render() {
     return(
-        <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: '4.5rem', height:'100vh' }}>
+        <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: '4.5rem', height:'100vh', position: 'fixed' }}>
         <a href="/" className="d-block p-3 link-body-emphasis text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="right" title="MyFitZone">
             <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="40" height="32"  fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2"/>
@@ -36,7 +36,7 @@ class SideBarView extends React.Component {
             </a>
             </li>
             <li>
-            <a href="#" className="nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Workout" title="Workous">
+            <a href="#" className="nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Workout" title="Workouts">
                 <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="24" height="24" role="img"  viewBox="0 0 640 512">
                 <path d="M96 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32V224v64V448c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V384H64c-17.7 0-32-14.3-32-32V288c-17.7 0-32-14.3-32-32s14.3-32 32-32V160c0-17.7 14.3-32 32-32H96V64zm448 0v64h32c17.7 0 32 14.3 32 32v64c17.7 0 32 14.3 32 32s-14.3 32-32 32v64c0 17.7-14.3 32-32 32H544v64c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32V288 224 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32zM416 224v64H224V224H416z"/></svg>
             </a>
