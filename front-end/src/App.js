@@ -1,10 +1,11 @@
 import React from 'react'
+import HomeView from './CustomComponents/HomeView';
 import AddEntryView from './CustomComponents/AddEntryView';
 import AddExerciseView from './CustomComponents/AddExerciseView';
 import AddWorkoutView from './CustomComponents/AddWorkoutView';
 import AllExercisesView from './CustomComponents/AllExercisesView';
 import AllWorkoutsView from './CustomComponents/AllWorkoutsView';
-import DashboardView from './CustomComponents/DashboardView';
+import DiaryView from './CustomComponents/DiaryView';
 import EventView from './CustomComponents/EventView';
 import LoginView from './CustomComponents/LoginView';
 import SignupView from './CustomComponents/SignupView';
@@ -27,7 +28,9 @@ class App extends React.Component {
     const page = state.CurrentPage;
     switch(page) {
       case "home":
-        return <DashboardView />;
+        return <HomeView />;
+      case "diary":
+        return <DiaryView />;  
       case "about":
         return <EventView />;
       case "addentry":
@@ -51,7 +54,7 @@ class App extends React.Component {
       case "userprofile":
         return <UserProfileView />;
       default:
-        return <DashboardView />;
+        return <HomeView />;
       }
   };
 
@@ -67,7 +70,7 @@ class App extends React.Component {
     return (
     <div id="viewer" className="container-fluid">
       <div className="container">
-         <SideBarView />
+         <HomeView />
       </div>
     </div>
     )
