@@ -11,13 +11,20 @@ import SignupView from './CustomComponents/SignupView';
 import SingleExerciseView from './CustomComponents/SingleExerciseView';
 import SingleWorkoutView from './CustomComponents/SingleWorkoutView';
 import UserProfileView from './CustomComponents/UserProfileView';
+import SideBarView from './CustomComponents/SideBarView';
 
 
-class App extends React.Component{
+class App extends React.Component {
 
-   QGetView = (state) => {
+  constructor(props) {
+    super(props);
+    this.state = {
+    }
+  } 
+
+
+  QGetView = (state) => {
     const page = state.CurrentPage;
-
     switch(page) {
       case "home":
         return <DashboardView />;
@@ -45,10 +52,26 @@ class App extends React.Component{
         return <UserProfileView />;
       default:
         return <DashboardView />;
-    }
+      }
   };
+
+  QSetView = (obj) => {
+    this.setState({
+      CurrentPage:obj.page
+    })
+  };
+    
   
 
-  render(){return <div><LoginView /></div>}
+  render(){ 
+    return (
+    <div id="viewer" className="container-fluid">
+      <div className="container">
+         <SideBarView />
+      </div>
+    </div>
+    )
+  }
 }
+
 export default App;
