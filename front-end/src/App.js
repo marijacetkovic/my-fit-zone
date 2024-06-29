@@ -1,23 +1,23 @@
 import React from 'react'
-import AddEntryView from './AddEntryView';
-import AddExerciseView from './AddExerciseView';
-import AddWorkoutView from './AddWorkoutView';
-import AllExercisesView from './AllExercisesView';
-import AllWorkoutsView from './AllWorkoutsView';
-import DashboardView from './DashboardView';
-import EventView from './EventView';
-import LoginView from './LoginView';
-import SignupView from './SignupView';
-import SingleExerciseView from './SingleExerciseView';
-import SingleWorkoutView from './SingleWorkoutView';
-import UserProfileView from './UserProfileView';
+import AddEntryView from './CustomComponents/AddEntryView';
+import AddExerciseView from './CustomComponents/AddExerciseView';
+import AddWorkoutView from './CustomComponents/AddWorkoutView';
+import AllExercisesView from './CustomComponents/AllExercisesView';
+import AllWorkoutsView from './CustomComponents/AllWorkoutsView';
+import DashboardView from './CustomComponents/DashboardView';
+import EventView from './CustomComponents/EventView';
+import LoginView from './CustomComponents/LoginView';
+import SignupView from './CustomComponents/SignupView';
+import SingleExerciseView from './CustomComponents/SingleExerciseView';
+import SingleWorkoutView from './CustomComponents/SingleWorkoutView';
+import UserProfileView from './CustomComponents/UserProfileView';
 
 
 class App extends React.Component{
 
    QGetView = (state) => {
     const page = state.CurrentPage;
-  
+
     switch(page) {
       case "home":
         return <DashboardView />;
@@ -49,6 +49,6 @@ class App extends React.Component{
   };
   
 
-  render(){return}
+  render(){return <div><LoginView /></div>}
 }
 export default App;
