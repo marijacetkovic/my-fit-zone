@@ -8,11 +8,11 @@ class AllWorkoutsView extends React.Component
     return(
         <div className='row'>
             <div className='row col-10 col-sm-10 justify-content-center'>
-            <WorkoutCard/>
-            <WorkoutCard/>
-            <WorkoutCard/>
-            <WorkoutCard/>
-            <WorkoutCard/>
+            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
+            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
+            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
+            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
+            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
 
             </div>
             <div class="dropdown col-2 col-sm-2 mt-3 ms-4">

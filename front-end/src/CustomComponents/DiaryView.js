@@ -25,7 +25,7 @@ class DiaryView extends React.Component
                 </button>
                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{padding: '10px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
                   <div className="">
-                    <WorkoutCard />
+                    <WorkoutCard class=""/>
                   </div>
                 </div>
               </div>

@@ -2,11 +2,10 @@ import React from 'react'
 
 class WorkoutCard extends React.Component
 {
-    //col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2 --pass as props
   render()
   {
     return(
-        <div className="card" style={{ border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+        <div className={this.props.class} style={{ border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
         <div className="card-body">
           <h5 className="card-title">Squats</h5>
           <h6 className="card-subtitle mb-2 text-muted">June 29, 2024</h6>

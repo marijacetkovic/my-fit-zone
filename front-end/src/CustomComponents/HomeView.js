@@ -4,12 +4,12 @@ class HomeView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoggedIn: false
+            isLoggedIn: true
         };
     }
 
-    QSetHomeInParent = () => {
-        this.props.QSetHomeFromChild();
+    QUnSetHomeInParent = () => {
+        this.props.QUnSetHomeFromChild();
     }
     QSetViewInParent = (obj) => {
         this.props.QIDFromChild(obj);
@@ -36,7 +36,7 @@ class HomeView extends React.Component {
                     )}
                     <div className="d-grid gap-4 d-sm-flex justify-content-sm-center">
                     {isLoggedIn ? (
-                        <button type="button"  onClick={()=>this.QSetHomeInParent()} className="btn btn-primary btn-lg px-4 gap-3">Continue</button>
+                        <button type="button"  onClick={()=>this.QUnSetHomeInParent()} className="btn btn-primary btn-lg px-4 gap-3">Continue</button>
                     ) : (<div>
                         <button type="button"   onClick={() => this.QSetViewInParent({ page: 'signup' })} 
                         className="btn btn-primary btn-lg px-4 gap-3 me-1">Register</button>
