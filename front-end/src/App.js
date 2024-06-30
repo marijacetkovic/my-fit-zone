@@ -1,7 +1,6 @@
 import React from 'react'
 import HomeView from './CustomComponents/HomeView';
 import AddEntryView from './CustomComponents/AddEntryView';
-import AddExerciseView from './CustomComponents/AddExerciseView';
 import AddWorkoutView from './CustomComponents/AddWorkoutView';
 import AllExercisesView from './CustomComponents/AllExercisesView';
 import AllWorkoutsView from './CustomComponents/AllWorkoutsView';
@@ -36,8 +35,6 @@ class App extends React.Component {
         return <EventView />;
       case "addentry":
         return <AddEntryView />;
-      case "addexercise":
-        return <AddExerciseView />;
       case "addworkout":
         return <AddWorkoutView />;
       case "allexercises":
@@ -78,13 +75,13 @@ class App extends React.Component {
             </div>
           )}
 
-          <div className={this.state.isHome ? "" : "col-9 col-sm-9"}>
+          <div className={this.state.isHome ? "" : "col-9 col-sm-10"}>
             {/* if home display home, else other components */}
             {this.state.isHome ? (
               <HomeView />
             ) : 
             (
-              <EventView />
+              <AllExercisesView />
             )}
           </div>
         </div>
