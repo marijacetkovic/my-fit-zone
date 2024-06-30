@@ -12,6 +12,7 @@ import SingleExerciseView from './CustomComponents/SingleExerciseView';
 import SingleWorkoutView from './CustomComponents/SingleWorkoutView';
 import UserProfileView from './CustomComponents/UserProfileView';
 import SideBarView from './CustomComponents/SideBarView';
+import AboutView from './CustomComponents/AboutView';
 
 
 class App extends React.Component {
@@ -81,7 +82,7 @@ class App extends React.Component {
               <HomeView />
             ) : 
             (
-              <AllExercisesView />
+              <DiaryView />
             )}
           </div>
         </div>
