@@ -73,18 +73,18 @@ class App extends React.Component {
         <div className="row">
           {/* if not homepage display sidebar */}
           {!this.state.isHome && (
-            <div className="col-lg-2">
+            <div className="col-3 col-sm-2">
               <SideBarView />
             </div>
           )}
 
-          <div className={this.state.isHome ? "" : "col-lg-8"}>
+          <div className={this.state.isHome ? "" : "col-9 col-sm-9"}>
             {/* if home display home, else other components */}
             {this.state.isHome ? (
               <HomeView />
             ) : 
             (
-              <UserProfileView />
+              <EventView />
             )}
           </div>
         </div>
