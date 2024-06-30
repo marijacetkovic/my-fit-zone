@@ -20,16 +20,20 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isHome:false
+      isHome:true,
+      CurrentPage:"home"
     }
   } 
 
 
   QGetView = (state) => {
     const page = state.CurrentPage;
+    console.log('im here')
+    console.log(page)
     switch(page) {
       case "home":
-        return <HomeView />;
+        return <HomeView QSetHomeFromChild={this.QSetHome}
+        QIDFromChild={this.QSetView}/>;
       case "diary":
         return <DiaryView />;  
       case "about":
@@ -43,9 +47,9 @@ class App extends React.Component {
       case "allworkouts":
         return <AllWorkoutsView />;
       case "signup":
-        return <SignupView />;
+        return <SignupView QIDFromChild={this.QSetView}/>;
       case "login":
-        return <LoginView />;
+        return <LoginView QIDFromChild={this.QSetView}/>;
       case "singleexercise":
         return <SingleExerciseView />;
       case "singleworkout":
@@ -63,7 +67,11 @@ class App extends React.Component {
     })
   };
     
-  
+  QSetHome = () => {
+    this.setState({
+      isHome:false
+    })
+  }
 
   render() {
     return (
@@ -77,13 +85,7 @@ class App extends React.Component {
           )}
 
           <div className={this.state.isHome ? "" : "col-9 col-sm-10"}>
-            {/* if home display home, else other components */}
-            {this.state.isHome ? (
-              <HomeView />
-            ) : 
-            (
-              <DiaryView />
-            )}
+            {this.QGetView(this.state)}
           </div>
         </div>
       </div>
