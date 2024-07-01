@@ -69,10 +69,10 @@ class AllExercisesView extends React.Component {
                 </div>
                 </div>
             </div>
-            <div class="dropdown col-2 col-sm-2 mt-2">
+            <div class="dropdown col-2 col-sm-2 mt-3 ms-4">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
   </button>
-  <div class="dropdown-menu dropdown-menu-left " aria-labelledby="dropdownMenuButton">
+  <div class="dropdown-menu dropdown-menu-left mt-1" aria-labelledby="dropdownMenuButton">
         <div className="container">
                 <h5>Add Exercise</h5>
                 <form>

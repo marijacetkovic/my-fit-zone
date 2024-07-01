@@ -18,7 +18,7 @@ class AllWorkoutsView extends React.Component
             <div class="dropdown col-2 col-sm-2 mt-3 ms-4">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
   </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{ border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)'}}>
+  <div class="dropdown-menu mt-1" aria-labelledby="dropdownMenuButton" style={{ border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)'}}>
         <div className="container">
                 <h5>Add Workout</h5>
                 <form>

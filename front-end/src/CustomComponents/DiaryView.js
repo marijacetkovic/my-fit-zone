@@ -7,7 +7,7 @@ class DiaryView extends React.Component
   render()
   {
    return(
-    <div className='container'>
+    <div className='container mt-2'>
     <div className="col-9 col-sm-10">
       <div className="card shadow">
         <div className="card-header">

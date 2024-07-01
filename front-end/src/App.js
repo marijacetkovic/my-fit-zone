@@ -12,7 +12,6 @@ import SingleExerciseView from './CustomComponents/SingleExerciseView';
 import SingleWorkoutView from './CustomComponents/SingleWorkoutView';
 import UserProfileView from './CustomComponents/UserProfileView';
 import SideBarView from './CustomComponents/SideBarView';
-import AboutView from './CustomComponents/AboutView';
 
 
 class App extends React.Component {
@@ -47,9 +46,9 @@ class App extends React.Component {
       case "workouts":
         return <AllWorkoutsView />;
       case "signup":
-        return <SignupView QIDFromChild={this.QSetView}/>;
+        return <SignupView QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
       case "login":
-        return <LoginView QIDFromChild={this.QSetView}/>;
+        return <LoginView QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
       case "singleexercise":
         return <SingleExerciseView />;
       case "singleworkout":
