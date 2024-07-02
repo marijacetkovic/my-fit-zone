@@ -1,16 +1,32 @@
 import React, { Component } from 'react';
 import WorkoutCard from './WorkoutCard';
 import DiaryDetailsCard from './DiaryDetailsCard';
+import axios from 'axios';
+import { API_URL } from '../Utils/Configuration';
+import WorkoutSelectDialog from './WorkoutSelectDialog';
 
 class DiaryView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
+      exercises: [],
+      showDialog: false
     };
   }
-
+  componentDidMount(){
+    axios.get(API_URL+'/exercise/', { withCredentials: true })
+    .then(response => {
+        console.log(response);
+        this.setState({
+            exercises:response.data
+        })
+    })
+    .catch(err => {
+        console.log(err);
+    })
+  }
   render() {
+    const data = this.state.exercises;
     return (
       <div className="container mt-2">
         <div className="col-9 col-sm-10">
@@ -133,11 +149,16 @@ class DiaryView extends Component {
                 </div>
                 </div>
               <div className="card-footer text-right">
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-primary me-2">
                   Save
                 </button>
+                <button type="button" class="btn btn-primary" onClick={()=>{this.setState({showDialog:true})}}>
+                Add Workout
+                </button>
               </div>
+             
             </form>
+            { this.state.showDialog ? <WorkoutSelectDialog onClose={() => this.setState({showDialog:false})} /> : ""}
           </div>
         </div>
       </div>

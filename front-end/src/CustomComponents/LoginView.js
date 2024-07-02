@@ -26,7 +26,7 @@ class LoginView extends React.Component{
         axios.post('http://88.200.63.148:1046/users/login',{
             email:this.state.user.email,
             password:this.state.user.password
-          })
+          },  { withCredentials: true })
           .then(response=>{
             console.log("Sent to server...")
             console.log(response.status)
