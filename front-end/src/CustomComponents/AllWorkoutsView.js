@@ -1,19 +1,36 @@
 import React from 'react'
 import WorkoutCard from './WorkoutCard'
+import axios from 'axios';
+import { API_URL } from '../Utils/Configuration';
 
-class AllWorkoutsView extends React.Component
-{
+class AllWorkoutsView extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            workouts:[]
+        }
+      }
+      componentDidMount(){
+        axios.get(API_URL+'/workout/', { withCredentials: true })
+        .then(response => {
+            console.log(response.data);
+            this.setState({
+                workouts:response.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+      }  
   render()
   {
+    const data = this.state.workouts;
     return(
         <div className='row'>
             <div className='row col-10 col-sm-10 justify-content-center'>
-            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
-            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
-            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
-            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
-            <WorkoutCard class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>
-
+            { data.length>0 ? 
+            data.map((d)=> (<WorkoutCard workoutData={d} class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2"/>))
+            : ""}
             </div>
             <div class="dropdown col-2 col-sm-2 mt-3 ms-4">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

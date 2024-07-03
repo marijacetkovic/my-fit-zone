@@ -31,6 +31,7 @@ class LoginView extends React.Component{
             console.log("Sent to server...")
             console.log(response.status)
             if(response.status===200){
+                console.log(document.cookie)
                 console.log('im here')
                 this.QUnSetHomeInParent(); //should also send auth data??
             }
