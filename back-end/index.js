@@ -11,7 +11,7 @@ const db = require('./db/conn.js')
 const port = 5000;
 
 app.use(cors({
-  origin: true, // Allow any origin for testing
+  origin: "http://localhost:3000",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
@@ -20,7 +20,6 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser(process.env.SECRET));
-
 app.use(session({
   secret: process.env.SECRET,
   resave: false,

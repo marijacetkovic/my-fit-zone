@@ -8,6 +8,7 @@ exercise.get('/', async (req, res, next)=>{
     if (req.session && req.session.user) {
         user_id = req.session.user.user_id;    
     }
+    console.log(req.session)
 
     if(!user_id){
         console.log("not logged in");

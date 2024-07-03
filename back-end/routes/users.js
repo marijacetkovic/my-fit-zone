@@ -35,6 +35,7 @@ users.post('/register', async (req, res, next) => {
 users.post('/login', async (req, res, next) => {
     const {email, password} = req.body;
     //encrypt passwords?
+    //shouldnt be able to login twice
     if(email && password){
         try{
             var queryResult = await db.authUser(email);

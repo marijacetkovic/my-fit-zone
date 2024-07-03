@@ -146,13 +146,13 @@ dataPool.deleteDiaryEntry = (id, user_id) => {
 };
 
 //creating new workout
-dataPool.addWorkout=(id, name, user_id)=>{
+dataPool.addWorkout=(name, user_id)=>{
   return new Promise ((resolve, reject)=>{
     //get date
-    let date = new Date().toISOString().splice(0,10); //get YYYY-MM-DD
-    conn.query(`INSERT INTO Workout (id, name, date, user_id) 
-      VALUES (?,?,?,?)`,
-      [id, name, date, user_id], (err,res)=>{
+    let date = new Date(); //get YYYY-MM-DD
+    conn.query(`INSERT INTO Workout (name, date, user_id) 
+      VALUES (?,?,?)`,
+      [name, date, user_id], (err,res)=>{
       if (err) return reject(err);
       return resolve(res);
     })
@@ -182,12 +182,12 @@ dataPool.allUserWorkouts = (id) => {
 };
 
 //connecting workout and exercise
-dataPool.addWorkoutExercise = (workout_id, exercise_name, sets, reps, exercise_id) => {
+dataPool.addWorkoutExercise = (workout_id, sets, reps, exercise_id) => {
   return new Promise((resolve, reject) => {
     conn.query(
-      `INSERT INTO WorkoutExercise (workout_id, exercise_name, sets, reps, exercise_id)
+      `INSERT INTO WorkoutExercise (workout_id, sets, reps, exercise_id)
        VALUES (?, ?, ?, ?)`,
-      [workout_id, exercise_id, sets, reps],
+      [workout_id, sets, reps, exercise_id],
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);
@@ -321,7 +321,7 @@ dataPool.addEvent=(name,time,location,organization,description, admin_id)=>{
   return new Promise ((resolve, reject)=>{
     //check role - only admins should add events
     conn.query(`INSERT INTO Event (name,time,location,organization,description,admin_id) VALUES (?,?,?,?,?,?)`,
-      [name, time, location, organization, description, admin], (err,res) => {
+      [name, time, location, organization, description, admin_id], (err,res) => {
       if (err) return reject(err);
       return resolve(res);
     })

@@ -18,6 +18,36 @@ workout.get('/', async (req, res, next) => {
         res.sendStatus(500);
     }
 })
+workout.post('/', async (req, res, next) => {
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User is not logged in." })
+    }
+    const {name, exercises} = req.body;
+    const user_id = req.session.user.user_id;
+    if(!name || exercises.length<1){
+        res.status(400).json({ message: 'Incomplete request body.' });
+    }
+    try{
+        const queryResultWorkout = await db.addWorkout(name, user_id);
+        const workout_id = queryResultWorkout.insertId;
+        for (const exercise of exercises) {
+            const { sets, reps, exercise_id } = exercise;
+            console.log("exercise id "+exercise_id)
+    
+            if (!sets || !reps || !exercise_id) {
+            return res.status(400).json({ error: 'Invalid exercise data.' });
+            }
+    
+            await db.addWorkoutExercise(workout_id, sets, reps, exercise_id);
+        }
+        console.log(queryResultWorkout)
+        res.status(201).json({ workout_id: workout_id, message: 'Workout and exercises added successfully.' });
+    }
+    catch(err){
+        console.log(err)
+    }
+
+})
 
 workout.delete('/:id', async (req, res, next) => {
     if (!req.session || !req.session.user) {
