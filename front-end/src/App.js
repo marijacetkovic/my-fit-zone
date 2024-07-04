@@ -12,6 +12,7 @@ import SingleExerciseView from './CustomComponents/SingleExerciseView';
 import SingleWorkoutView from './CustomComponents/SingleWorkoutView';
 import UserProfileView from './CustomComponents/UserProfileView';
 import SideBarView from './CustomComponents/SideBarView';
+import UnauthorizedView from './CustomComponents/UnauthorizedView';
 
 
 class App extends React.Component {
@@ -28,38 +29,37 @@ class App extends React.Component {
 
   QGetView = (state) => {
     const page = state.CurrentPage;
-    console.log('getting view '+page)
-    console.log(this.state.user)
-    switch(page) {
-      case "home":
-        return <HomeView user={this.state.user} QUnSetHomeFromChild={this.QUnSetHome}
-        QIDFromChild={this.QSetView}/>;
-      case "diary":
-        return <DiaryView />;  
-      case "events":
-        return <EventView />;
-      case "addentry":
-        return <AddEntryView />;
-      case "addworkout":
-        return <AddWorkoutView />;
-      case "exercises":
-        return <AllExercisesView QIDFromChild={this.QSetView}/>;
-      case "workouts":
-        return <AllWorkoutsView />;
-      case "signup":
-        return <SignupView QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
-      case "login":
-        return <LoginView QUserFromChild={this.QSetUser} QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
-      case "singleexercise":
-        return <SingleExerciseView />;
-      case "singleworkout":
-        return <SingleWorkoutView />;
-      case "profile":
-        return <UserProfileView />;
-      default:
-        return <HomeView />;
-      }
-  };
+    console.log('getting view ' + page);
+    console.log(this.state.user.logged);
+
+    const logged = this.state.user.logged;
+
+    switch (page) {
+        case "home":
+            return <HomeView user={this.state.user} QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
+        case "diary":
+            return logged ? <DiaryView /> : <UnauthorizedView />;
+        case "events":
+            return logged ? <EventView /> : <UnauthorizedView />;
+        case "addentry":
+            return logged ? <AddEntryView /> : <UnauthorizedView />;
+        case "exercises":
+            return logged ? <AllExercisesView QSetHomeFromChild={this.QSetHome} QIDFromChild={this.QSetView}/> : <UnauthorizedView />;
+        case "workouts":
+            return logged ? <AllWorkoutsView  QSetHomeFromChild={this.QSetHome} QIDFromChild={this.QSetView}/> : <UnauthorizedView />;
+        case "signup":
+            return <SignupView QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
+        case "login":
+            return <LoginView QUserFromChild={this.QSetUser} QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
+        case "profile":
+            return logged ? <UserProfileView /> : <UnauthorizedView />;
+        case "unauthorized":
+            return <UnauthorizedView QIDFromChild={this.QSetView} />
+        default:
+            return <HomeView />;
+    }
+};
+
 
   QSetView = (obj) => {
     this.setState({

@@ -22,9 +22,12 @@ class AllExercisesView extends React.Component {
         console.log(err);
     })
   }
+  QSetHomeInParent = () => {
+    this.props.QSetHomeFromChild();
+}
   QSetViewInParent = (obj) => {
     this.props.QIDFromChild(obj);
-}    
+}  
   QGetTextFromField=(e)=>{
     this.setState(prevState=>({
         exercise:{...prevState.exercise,[e.target.name]:e.target.value}
@@ -43,6 +46,10 @@ class AllExercisesView extends React.Component {
           })
           .catch(err=>{
             console.log(err)
+            if(err.response.status===401){
+              this.QSetHomeInParent();
+              this.QSetViewInParent({page:"unauthorized"});
+          }
           })
     }
 

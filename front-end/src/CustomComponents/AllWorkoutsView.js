@@ -10,6 +10,13 @@ class AllWorkoutsView extends React.Component{
             workouts:[]
         }
       }
+      QSetHomeInParent = () => {
+        this.props.QSetHomeFromChild();
+    }
+      QSetViewInParent = (obj) => {
+        this.props.QIDFromChild(obj);
+    }
+
       componentDidMount(){
         axios.get(API_URL+'/workout/', { withCredentials: true })
         .then(response => {
@@ -20,6 +27,10 @@ class AllWorkoutsView extends React.Component{
         })
         .catch(err => {
             console.log(err);
+            if(err.response.status===401){
+                this.QSetHomeInParent();
+                this.QSetViewInParent({page:"unauthorized"});
+            }
         })
       }  
   render()
