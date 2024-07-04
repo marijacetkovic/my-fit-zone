@@ -8,12 +8,15 @@ class LoginView extends React.Component{
         };
     }
     
-  QSetViewInParent = (obj) => {
+    QSetViewInParent = (obj) => {
         this.props.QIDFromChild(obj);
     } 
     QUnSetHomeInParent = () => {
         this.props.QUnSetHomeFromChild();
     }
+    QSetUserInParent = (obj) => {
+        this.props.QUserFromChild(obj);
+    } 
     QGetTextFromField=(e)=>{
         this.setState(prevState=>({
             user:{...prevState.user,[e.target.name]:e.target.value}
@@ -31,9 +34,9 @@ class LoginView extends React.Component{
             console.log("Sent to server...")
             console.log(response.status)
             if(response.status===200){
-                console.log(document.cookie)
                 console.log('im here')
-                this.QUnSetHomeInParent(); //should also send auth data??
+                this.QSetUserInParent({...response.data[0], logged:true});
+                this.QUnSetHomeInParent();
             }
           })
           .catch(err=>{

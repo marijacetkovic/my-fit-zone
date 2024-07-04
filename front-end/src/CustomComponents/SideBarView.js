@@ -1,14 +1,36 @@
 import React from 'react'
+import axios from 'axios';
+import { API_URL } from '../Utils/Configuration';
 
 
 class SideBarView extends React.Component {
     componentDidMount() {
         // initialize tooltips
         document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltipTriggerEl => {
-            new window.bootstrap.Tooltip(tooltipTriggerEl);
-          });
-      }
-
+            new window.bootstrap.Tooltip(tooltipTriggerEl, {
+              trigger: 'hover' 
+            });
+        });
+    }
+    QSetUserInParent = (obj) => {
+        this.props.QUserFromChild(obj);
+    } 
+  handleLogout= () => {
+    console.log("logging out")
+    axios.post(API_URL+'/users/logout', { withCredentials: true })
+        .then(response => {
+            console.log(response.data);
+            this.setState({
+                workouts:response.data
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    this.QSetUserInParent({...null,logged:false})
+    this.QSetHomeInParent(); 
+    this.QSetViewInParent({ page: 'home' });
+  }
   QSetViewInParent = (obj) => {
     this.props.QIDFromChild(obj);
   }
@@ -18,13 +40,15 @@ class SideBarView extends React.Component {
   render() {
     return(
         <div className="d-flex flex-column flex-shrink-0 bg-body-tertiary" style={{ width: '4.5rem', height:'100vh', position: 'fixed' }}>
-        <a href="/" className="d-block p-3 link-body-emphasis text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="right" title="MyFitZone">
-            <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="40" height="32"  fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
+        
+        <ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
+            <li className="nav-item">
+            <a href="#" onClick={() => {this.QSetHomeInParent(); this.QSetViewInParent({ page: 'home' })}} className="nav-link py-3 border-bottom rounded-0" aria-label='MyFitZone' title="MyFitZone">
+            <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="40" height="32" role='img'  fill="currentColor"  viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2"/>
             </svg>
-            <span className="visually-hidden">MyFitZone</span>
         </a>
-        <ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
+            </li>
             <li className="nav-item">
             <a href="#" onClick={() => {this.QSetViewInParent({ page: 'addentry' })}} className="nav-link active py-3 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Entry" title="New Entry">
                 <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="24" height="24" role="img" fill="currentColor" class="bi bi-pencil-square" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -74,7 +98,7 @@ class SideBarView extends React.Component {
             <li><a className="dropdown-item" href="#">Settings</a></li>
             <li><a className="dropdown-item" onClick={() => {this.QSetViewInParent({ page: 'profile' })}}>Profile</a></li>
             <li><hr className="dropdown-divider" /></li>
-            <li><a className="dropdown-item" onClick={() => {this.QSetHomeInParent(); this.QSetViewInParent({ page: 'home' })}} href="#">Sign out</a></li>
+            <li><a className="dropdown-item" onClick={this.handleLogout} href="#">Sign out</a></li>
             </ul>
         </div>
         </div>

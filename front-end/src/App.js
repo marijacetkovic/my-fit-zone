@@ -20,7 +20,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       isHome:true,
-      CurrentPage:"home"
+      CurrentPage:"home",
+      user:{}
     }
   } 
 
@@ -31,7 +32,7 @@ class App extends React.Component {
     console.log(page)
     switch(page) {
       case "home":
-        return <HomeView QUnSetHomeFromChild={this.QUnSetHome}
+        return <HomeView user={this.state.user} QUnSetHomeFromChild={this.QUnSetHome}
         QIDFromChild={this.QSetView}/>;
       case "diary":
         return <DiaryView />;  
@@ -48,7 +49,7 @@ class App extends React.Component {
       case "signup":
         return <SignupView QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
       case "login":
-        return <LoginView QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
+        return <LoginView QUserFromChild={this.QSetUser} QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
       case "singleexercise":
         return <SingleExerciseView />;
       case "singleworkout":
@@ -80,6 +81,16 @@ class App extends React.Component {
     console.log("elenaaaaaaaaaa")
     console.log(this.state.isHome)
   }
+  QSetUser = (obj) => {
+    console.log("app.js")
+    this.setState({
+      user: obj,
+    },
+    () => {
+      console.log(this.state.user);
+    })
+
+  }
 
   render() {
     return (
@@ -88,7 +99,8 @@ class App extends React.Component {
           {/* if not homepage display sidebar */}
           {!this.state.isHome && (
             <div className="col-3 col-sm-2">
-              <SideBarView QSetHomeFromChild={this.QSetHome} QIDFromChild={this.QSetView}/>
+              <SideBarView QUserFromChild={this.QSetUser} QSetHomeFromChild={this.QSetHome} 
+              QIDFromChild={this.QSetView}/>
             </div>
           )}
 

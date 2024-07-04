@@ -29,7 +29,7 @@ class WorkoutCard extends React.Component
                 <li className="list-group-item">
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
-                    <h6>Exercise {e.id}</h6>
+                    <h6>{e.name}</h6>
                     <p>Sets: {e.sets}, Reps: {e.reps}</p>
                   </div>
                 </div>

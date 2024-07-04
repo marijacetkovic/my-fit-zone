@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { API_URL } from '../Utils/Configuration';
 
 class SignupView extends React.Component{
     constructor(props) {
@@ -20,7 +21,7 @@ class SignupView extends React.Component{
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://88.200.63.148:1046/users/register',{
+        axios.post(API_URL+'users/register',{
             name:this.state.user.name,
             surname:this.state.user.surname,
             email:this.state.user.email,
