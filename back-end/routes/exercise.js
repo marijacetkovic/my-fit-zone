@@ -99,7 +99,33 @@ exercise.post('/favorite', async (req, res, next) => {
         }
     }
 });
+exercise.delete('/:id', async (req, res, next) => {
+    console.log("in delete")
+    const exercise_id = req.params.id;
+console.log(exercise_id)
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User is not logged in." })
+    }
+    
+    const user_id = req.session.user.user_id;
 
+
+    // check if req body is complete
+    if (user_id && exercise_id) {
+        try{
+            var queryResult = await db.deleteExercise(exercise_id, user_id);
+            if (queryResult.affectedRows === 0) {
+                console.log("unsuccessful unfavorite");
+                return res.sendStatus(404); // unsuccessful
+            }
+            res.json(queryResult);
+        }
+        catch (err) {
+            console.log('Error favoriting exercise:', err);
+            res.sendStatus(500); 
+        }
+    }
+});
 exercise.delete('/favorite', async (req, res, next) => {
     const exercise_id = req.body.exercise_id;
 

@@ -1,6 +1,6 @@
 const express= require("express")
 const entry = express.Router();
-const { conn, dataPool } = require('../db/conn.js')
+const db = require('../db/conn.js')
 
 //retrieves all diary entries for a user
 entry.get('/', async (req, res, next)=>{
@@ -12,7 +12,7 @@ entry.get('/', async (req, res, next)=>{
     const user_id = req.session.user.user_id;
 
     try{
-        var queryResult = await dataPool.allUserDiaryEntries(user_id);
+        var queryResult = await db.allUserDiaryEntries(user_id);
         res.json(queryResult);
     }
     catch(err){
@@ -37,7 +37,7 @@ entry.post('/', async (req, res) => {
     
     if (validEntry) {
         try {
-            var queryResult = await dataPool.addDiaryEntry(duration, cal_burned, cal_consumed, 
+            var queryResult = await db.addDiaryEntry(duration, cal_burned, cal_consumed, 
                 hours_slept, water_intake, image, description, workout_id, event_id, user_id);
             res.json(queryResult);
         } 
@@ -65,7 +65,7 @@ entry.delete('/deleteDiaryEntry/:id', async (req, res) => {
     const user_id = req.session.user_id;
   
     try {
-      const queryResult = await dataPool.deleteDiaryEntry(entry_id, user_id);
+      const queryResult = await db.deleteDiaryEntry(entry_id, user_id);
       if (queryResult.affectedRows === 0) {
         console.log("Diary entry not found or not allowed to delete");
         return res.sendStatus(404); // Not Found

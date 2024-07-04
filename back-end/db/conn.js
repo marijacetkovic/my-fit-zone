@@ -285,7 +285,7 @@ dataPool.allExercises = (user_id) => {
   //user id should be differernt for admin and personal exercises - user id
   return new Promise((resolve, reject) => {
     conn.query(
-      `SELECT e.id, e.name
+      `SELECT e.id, e.name, e.category
       FROM Exercise e
       INNER JOIN User u ON e.user_id = u.id
       WHERE e.user_id = ? OR u.role = 'admin'
@@ -300,11 +300,11 @@ dataPool.allExercises = (user_id) => {
 };
 
 //delete an exercise
-dataPool.deleteExercise = (id) => {
+dataPool.deleteExercise = (id, user_id) => {
   return new Promise((resolve, reject) => {
     conn.query(
-      `DELETE FROM Exercise WHERE id = ?`,
-      [id],
+      `DELETE FROM Exercise WHERE id = ? and user_id = ?`,
+      [id, user_id],
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);

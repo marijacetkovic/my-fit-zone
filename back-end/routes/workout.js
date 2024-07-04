@@ -10,8 +10,14 @@ workout.get('/', async (req, res, next) => {
     const user_id = req.session.user.user_id;
 
     try{
-        var queryResult = await db.allUserWorkouts(user_id);
-        res.json(queryResult);
+        var workoutArray = await db.allUserWorkouts(user_id);
+        var userWorkouts = [];
+        for (var workout of workoutArray){
+            var queryResult = await db.getWorkoutExercises(workout.id);
+            var singleUserWorkout = {workout, exercises: queryResult};
+            userWorkouts.push(singleUserWorkout);
+        }
+        res.json(userWorkouts);
     }
     catch(err){
         console.log(err);
@@ -45,6 +51,8 @@ workout.post('/', async (req, res, next) => {
     }
     catch(err){
         console.log(err)
+        res.sendStatus(500);
+
     }
 
 })
