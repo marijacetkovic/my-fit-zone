@@ -16,8 +16,6 @@ class SignupView extends React.Component{
         this.setState(prevState=>({
             user:{...prevState.user,[e.target.name]:e.target.value}
         }))
-        console.log(this.state)
-        console.log(this.state.user)
     }
     handleSubmit = (e) => {
         e.preventDefault();
@@ -48,30 +46,22 @@ class SignupView extends React.Component{
           <h1 className="h3 text-center mb-3 fw-normal">Join us!</h1>
       
           <div className="form-floating">
-            <input type="text" className="form-control mb-1" onChange={(e)=>this.QGetTextFromField(e)} name='name' id="name" placeholder="Name" />
+            <input type="text" required className="form-control mb-1" onChange={(e)=>this.QGetTextFromField(e)} name='name' id="name" placeholder="Name" />
             <label htmlFor="name">Name</label>
           </div>
           <div className="form-floating">
-            <input type="text" className="form-control mb-1" onChange={(e)=>this.QGetTextFromField(e)} name='surname' id="surname" placeholder="Surname" />
+            <input type="text" required className="form-control mb-1" onChange={(e)=>this.QGetTextFromField(e)} name='surname' id="surname" placeholder="Surname" />
             <label htmlFor="surname">Surname</label>
           </div>
           <div className="form-floating">
-            <input type="email" className="form-control mb-1" onChange={(e)=>this.QGetTextFromField(e)} name='email' id="email" placeholder="name@example.com" />
+            <input type="email" required className="form-control mb-1" onChange={(e)=>this.QGetTextFromField(e)} name='email' id="email" placeholder="name@example.com" />
             <label htmlFor="email">Email address</label>
           </div>
           <div className="form-floating">
-            <input type="password" className="form-control" onChange={(e)=>this.QGetTextFromField(e)} name='password' id="password" placeholder="Password" />
+            <input type="password" required className="form-control" onChange={(e)=>this.QGetTextFromField(e)} name='password' id="password" placeholder="Password" />
             <label htmlFor="password">Password</label>
           </div>
-        
-          <div className="form-check text-start my-3">
-            <input className="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault" />
-            <label className="form-check-label" htmlFor="flexCheckDefault">
-              Remember me
-            </label>
-          </div>
-          
-          <button className="btn btn-primary w-100 py-2" type="submit">Register</button>
+          <button className="btn btn-primary w-100 mt-2 py-2" type="submit">Register</button>
           
           <p className="mt-5 mb-3 text-center text-body-secondary">© MyFitZone</p>
         </form>

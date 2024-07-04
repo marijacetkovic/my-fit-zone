@@ -16,7 +16,7 @@ class HomeView extends React.Component {
     }
 
     render() {
-        const { user } = this.props;
+        const { user } = this.props || {logged:false};
         console.log("im in home")
         console.log(user)
 

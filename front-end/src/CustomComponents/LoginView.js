@@ -21,8 +21,6 @@ class LoginView extends React.Component{
         this.setState(prevState=>({
             user:{...prevState.user,[e.target.name]:e.target.value}
         }))
-        console.log(this.state)
-        console.log(this.state.user)
     }
     handleSubmit = (e) => {
         e.preventDefault();
@@ -54,11 +52,11 @@ class LoginView extends React.Component{
         <h1 className="h3 text-center mb-3 fw-normal">Welcome back!</h1>
     
         <div className="form-floating">
-          <input type="email" className="form-control mb-1" onChange={(e)=>this.QGetTextFromField(e)}  name='email' id="email" placeholder="name@example.com" />
+          <input type="email" className="form-control mb-1" required onChange={(e)=>this.QGetTextFromField(e)}  name='email' id="email" placeholder="name@example.com" />
           <label htmlFor="email">Email address</label>
         </div>
         <div className="form-floating">
-          <input type="password" className="form-control" onChange={(e)=>this.QGetTextFromField(e)}  name='password' id="password" placeholder="Password" />
+          <input type="password" className="form-control" required onChange={(e)=>this.QGetTextFromField(e)}  name='password' id="password" placeholder="Password" />
           <label htmlFor="password">Password</label>
         </div>
       

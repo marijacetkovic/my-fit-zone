@@ -28,8 +28,8 @@ class App extends React.Component {
 
   QGetView = (state) => {
     const page = state.CurrentPage;
-    console.log('im here')
-    console.log(page)
+    console.log('getting view '+page)
+    console.log(this.state.user)
     switch(page) {
       case "home":
         return <HomeView user={this.state.user} QUnSetHomeFromChild={this.QUnSetHome}
@@ -43,7 +43,7 @@ class App extends React.Component {
       case "addworkout":
         return <AddWorkoutView />;
       case "exercises":
-        return <AllExercisesView />;
+        return <AllExercisesView QIDFromChild={this.QSetView}/>;
       case "workouts":
         return <AllWorkoutsView />;
       case "signup":
