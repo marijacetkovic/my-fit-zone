@@ -102,7 +102,7 @@ exercise.post('/favorite', async (req, res, next) => {
 exercise.delete('/:id', async (req, res, next) => {
     console.log("in delete")
     const exercise_id = req.params.id;
-console.log(exercise_id)
+    console.log(exercise_id)
     if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User is not logged in." })
     }

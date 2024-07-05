@@ -61,10 +61,16 @@ dataPool.assignAdmin=(id)=>{
 }
 
 //establish user profiles for non admin users
-dataPool.addUserProfile=(id,height,weight,cal_intake)=>{
+dataPool.addUserProfile=(id,height,weight,cal_intake,img,
+  current_streak, max_streak, total_entries)=>{
   return new Promise ((resolve, reject) => {
-    conn.query(`INSERT INTO UserProfile (height,weight,cal_intake,user_id) VALUES (?,?,?,?)`,
-      [height, weight, cal_intake, id], (err,res)=>{
+    conn.query(`INSERT INTO UserProfile (height,weight,cal_intake, 
+      img, current_streak, max_streak, 
+      total_entries,user_id) 
+      VALUES (?,?,?,?,?,?,?,?)`,
+      [height, weight, cal_intake, 
+        img, current_streak, max_streak,
+        total_entries, id], (err,res)=>{
       if (err) return reject(err);
       return resolve(res);
     })
@@ -162,7 +168,7 @@ dataPool.addWorkout=(name, user_id)=>{
 //deleting a workout
 dataPool.deleteWorkout = (workout_id, user_id) => {
   return new Promise((resolve, reject) => {
-    conn.query(`DELETE FROM Workout WHERE id = ? and user_id = ?`, [workout_idid, user_id],
+    conn.query(`DELETE FROM Workout WHERE id = ? and user_id = ?`, [workout_id, user_id],
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);

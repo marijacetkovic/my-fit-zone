@@ -1,6 +1,23 @@
 const express= require("express");
 const users = express.Router();
 const db = require('../db/conn.js')
+const multer = require('multer');
+
+
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, callBack) => {
+        callBack(null, 'uploads')
+    },
+    filename: (req, file, callBack) => {
+        callBack(null, `${file.originalname}`)
+    }
+  })
+  
+// Configure Multer,
+let upload_dest = multer({ dest: 'uploads/' })
+
 
 users.post('/register', async (req, res, next) => {
     const {name, surname, email, password} = req.body;
@@ -120,20 +137,26 @@ users.get('/profile', async (req, res, next) => {
     }
 })
 
-users.post('/profile', async (req, res, next) => {
+users.post('/profile', upload_dest.single('file'), async (req, res, next) => {
     //bmi calculation???
     const {height, weight, cal_intake} = req.body;
     const bmi = bmiCalc(height, weight);
+    const img = req.file;
     
     if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User not logged in" })
     }
     
     const user_id = req.session.user.user_id;
+    const max_streak = 0;
+    const current_streak = 0;
+    const total_entries = 0;
 
     if(height && weight){
         try{
-            var queryResult = await db.addUserProfile(user_id, height, weight, cal_intake);
+            var queryResult = await db.addUserProfile(user_id, height, weight, 
+                cal_intake, img, 
+                current_streak, max_streak, total_entries);
             if (queryResult.affectedRows === 0) {
                 console.log("unsuccessful user profile creation");
                 return res.sendStatus(404); // unsuccessful

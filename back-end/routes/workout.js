@@ -58,6 +58,10 @@ workout.post('/', async (req, res, next) => {
 })
 
 workout.delete('/:id', async (req, res, next) => {
+    const workout_id = req.params.id;
+    if(!workout_id){
+        return res.status(400).json({ message: "Bad request." })
+    }
     if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User is not logged in." })
     }
@@ -65,7 +69,7 @@ workout.delete('/:id', async (req, res, next) => {
     const user_id = req.session.user.user_id;
     //here id is workout id
     try{
-        var queryResult = await db.deleteWorkout(req.params.id, user_id);
+        var queryResult = await db.deleteWorkout(workout_id, user_id);
         if (queryResult.affectedRows === 0) {
             console.log("unsuccessful workout deletion");
             return res.sendStatus(404); // unsuccessful
