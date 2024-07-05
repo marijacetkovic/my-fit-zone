@@ -42,7 +42,7 @@ class App extends React.Component {
         case "events":
             return logged ? <EventView /> : <UnauthorizedView />;
         case "addentry":
-            return logged ? <AddEntryView /> : <UnauthorizedView />;
+            return logged ? <AddEntryView  QSetHomeFromChild={this.QSetHome} QIDFromChild={this.QSetView} /> : <UnauthorizedView />;
         case "exercises":
             return logged ? <AllExercisesView QSetHomeFromChild={this.QSetHome} QIDFromChild={this.QSetView}/> : <UnauthorizedView />;
         case "workouts":

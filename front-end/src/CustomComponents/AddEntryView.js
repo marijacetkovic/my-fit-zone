@@ -5,13 +5,19 @@ import axios from 'axios';
 import { API_URL } from '../Utils/Configuration';
 import WorkoutSelectDialog from './WorkoutSelectDialog';
 
-class DiaryView extends Component {
+class AddEntryView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       exercises: [],
       showDialog: false
     };
+  }
+  QSetHomeInParent = () => {
+    this.props.QSetHomeFromChild();
+  }
+  QSetViewInParent = (obj) => {
+    this.props.QIDFromChild(obj);
   }
   componentDidMount(){
     axios.get(API_URL+'/exercise/', { withCredentials: true })
@@ -158,7 +164,9 @@ class DiaryView extends Component {
               </div>
              
             </form>
-            { this.state.showDialog ? <WorkoutSelectDialog onClose={() => this.setState({showDialog:false})} /> : ""}
+            { this.state.showDialog ? <WorkoutSelectDialog onClose={() => this.setState({showDialog:false})} 
+               QSetHomeFromChild={this.QSetHomeInParent} QIDFromChild={this.QSetViewInParent}
+              /> : ""}
           </div>
         </div>
       </div>
@@ -166,4 +174,4 @@ class DiaryView extends Component {
   }
 }
 
-export default DiaryView;
+export default AddEntryView;

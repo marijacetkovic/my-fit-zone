@@ -10,7 +10,12 @@ class WorkoutSelectDialog extends React.Component{
             workouts: []
         }
     }
-
+    QSetHomeInParent = () => {
+      this.props.QSetHomeFromChild();
+  }
+    QSetViewInParent = (obj) => {
+      this.props.QIDFromChild(obj);
+  }
     handleWorkoutSelect(id){
         console.log(id+"wk is chosen")
     }
@@ -25,6 +30,10 @@ class WorkoutSelectDialog extends React.Component{
         })
         .catch(err => {
             console.log(err);
+            if(err.response.status===401){
+              this.QSetHomeInParent();
+              this.QSetViewInParent({page:"unauthorized"});
+          }
         })
       }  
     render(){
