@@ -7,7 +7,7 @@ class UserProfileView extends React.Component
   constructor(props){
     super(props);
     this.state = {
-      profile:false,
+      profile:true,
       userProfile:{}
     }
   }

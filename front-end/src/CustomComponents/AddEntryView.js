@@ -62,7 +62,7 @@ class AddEntryView extends Component {
                 ></textarea>
                 <div className="mt-3">
                   <div className="row row-cols-md-auto g-3">
-                    <div className="col">
+                    <div className="col-12">
                       <input
                         type="number"
                         className="form-control"
@@ -72,7 +72,7 @@ class AddEntryView extends Component {
                         required
                       />
                     </div>
-                    <div className="col">
+                    <div className="col-12">
                       <input
                         type="number"
                         className="form-control"
@@ -82,7 +82,7 @@ class AddEntryView extends Component {
                         required
                       />
                     </div>
-                    <div className="col">
+                    <div className="col-12">
                       <input
                         type="number"
                         className="form-control"
@@ -92,7 +92,7 @@ class AddEntryView extends Component {
                         required
                       />
                     </div>
-                    <div className="col">
+                    <div className="col-12">
                       <input
                         type="number"
                         className="form-control"
@@ -103,7 +103,7 @@ class AddEntryView extends Component {
                         required
                       />
                     </div>
-                    <div className="col">
+                    <div className="col-12">
                       <input
                         type="number"
                         className="form-control"
@@ -113,7 +113,7 @@ class AddEntryView extends Component {
                         required
                       />
                     </div>
-                    <div className="col">
+                    <div className="col-12">
                       <input
                         type="text"
                         className="form-control"
@@ -122,7 +122,7 @@ class AddEntryView extends Component {
                         placeholder="Image URL"
                       />
                     </div>
-                    <div className="col">
+                    <div className="col-12">
                       <input
                         type="text"
                         className="form-control"
@@ -132,7 +132,7 @@ class AddEntryView extends Component {
                         required
                       />
                     </div>
-                    <div className="col">
+                    <div className="col-12">
                       <input
                         type="text"
                         className="form-control"
@@ -141,7 +141,7 @@ class AddEntryView extends Component {
                         placeholder="Workout ID"
                       />
                     </div>
-                    <div className="col">
+                    <div className="col-12">
                       <input
                         type="text"
                         className="form-control"
