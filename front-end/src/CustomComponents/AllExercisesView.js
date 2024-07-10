@@ -34,23 +34,24 @@ class AllExercisesView extends React.Component {
     }))
     console.log(this.state)
     console.log(this.state.exercise)
-    }
-    handleDelete = (id) => {
-        console.log("dekete id "+id)
-        axios.delete(`http://88.200.63.148:1046/exercise/${id}`
-            ,{withCredentials: true})
-          .then(response=>{
-            console.log("Sent to server...")
-            console.log(response.status)
-            this.setState({update:true})
-          })
-          .catch(err=>{
-            console.log(err)
-            if(err.response.status===401){
-              this.QSetHomeInParent();
-              this.QSetViewInParent({page:"unauthorized"});
-          }
-          })
+  }
+
+  handleDelete = (id) => {
+      console.log("dekete id "+id)
+      axios.delete(`http://88.200.63.148:1046/exercise/${id}`
+          ,{withCredentials: true})
+        .then(response=>{
+          console.log("Sent to server...")
+          console.log(response.status)
+          this.setState({update:true})
+        })
+        .catch(err=>{
+          console.log(err)
+          if(err.response.status===401){
+            this.QSetHomeInParent();
+            this.QSetViewInParent({page:"unauthorized"});
+        }
+        })
     }
 
     handleSubmit = (e) => {

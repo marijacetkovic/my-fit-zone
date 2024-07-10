@@ -9,9 +9,16 @@ class AllWorkoutsView extends React.Component{
         super(props);
         this.state = {
             workouts:[],
-            exerciseInput:[],
+            exerciseInput:[
+                {
+                exercise_id:'',
+                sets:'',
+                reps:''
+            }],
             exerciseData: [],
-            showDialog:false
+            showDialog:false,
+            exerciseLimit:5,
+            update:false
         }
         this.handleFormChange = debounce(this.handleFormChange.bind(this), 300);
 
@@ -84,13 +91,24 @@ class AllWorkoutsView extends React.Component{
         })
         console.log(this.state.exerciseInput)
     }
+
+    QRemoveField = (id) => {
+        if(id!==0){
+            console.log("emove id "+id)
+            //keep all with id different than removed
+            const temp = this.state.exerciseInput.filter((e, index) => index !== id);
+            this.setState(prev => ({
+                exerciseInput: temp,
+                exerciseLimit: prev.exerciseLimit + 1
+            }))
+        }
+    }
         
     handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://88.200.63.148:1046/exercise/',{
-            name:this.state.exercise.name,
-            description:this.state.exercise.description,
-            category:this.state.exercise.category
+        axios.post('http://88.200.63.148:1046/workout/',{
+            name:this.state.workoutName,
+            exercises:this.state.exerciseInput
             },  { withCredentials: true })
             .then(response=>{
             console.log("Sent to server...")
@@ -104,16 +122,19 @@ class AllWorkoutsView extends React.Component{
 
 
     handleFormChange = (e) => {
-        e.preventDefault();
-        this.setState( prev => ({
-            exerciseInput: [...prev.exerciseInput, {
-                exercise_id: '',
-                exercise_name: '',
-                sets: 0,
-                reps: 0
-            }]
-        })
-    )
+        if(this.state.exerciseLimit!==0){
+            this.setState( prev => ({
+                exerciseInput: [...prev.exerciseInput, {
+                    id: '',
+                    sets: '',
+                    reps: ''
+                }],
+                exerciseLimit: prev.exerciseLimit-1
+            }))
+        }
+        else{
+            console.log("cant add anymore")
+        }
     }
 
     toggleDialog = () => {
@@ -124,17 +145,15 @@ class AllWorkoutsView extends React.Component{
 
     QGetValueFromSelect = (e,id) => {
         console.log(e.target.value)
-        // let singleExerciseData = this.state.exerciseInput[id] //get single exercise entry
-        // let allExercisesData = this.state.exerciseInput;
-        // singleExerciseData = {...singleExerciseData,
-        //    id:e_id,
-        //    name:e.target.value
-        // }
-        // allExercisesData[id] = singleExerciseData
-        // this.setState({
-        //     exerciseInput: allExercisesData
-        // })
-        // console.log(this.state.exerciseInput)
+        let singleExerciseData = this.state.exerciseInput[id] //get single exercise entry
+        let allExercisesData = this.state.exerciseInput;
+        singleExerciseData = {...singleExerciseData,
+           exercise_id:e.target.value}
+        allExercisesData[id] = singleExerciseData
+        this.setState({
+            exerciseInput: allExercisesData
+        })
+        console.log(this.state.exerciseInput)
     }
   render()
   {
@@ -176,16 +195,21 @@ class AllWorkoutsView extends React.Component{
                         name="workoutName"
                         placeholder=""
                         required
+                        onChange={(e)=>{
+                          this.setState({
+                            workoutName: e.target.value
+                          })
+                        }}
                     />
                     </div>
                           {exerciseInput.map((exercise, id) => (
                             <div key={id} className="mb-3">
                               <div className="row g-3">
-                                <div className="col-md-6">
+                                <div className="col-md-5">
                                 <select 
                                         className="form-select" 
                                         onChange={(event) => this.QGetValueFromSelect(event, id)}                                    >
-                                        <option selected>Exercise {id}</option>
+                                        <option selected>Exercise {id+1}</option>
                                         {exerciseData.length > 0 ? (
                                         exerciseData.map((exercise) => (
                                             <option key={exercise.id} value={exercise.id}>
@@ -204,6 +228,7 @@ class AllWorkoutsView extends React.Component{
                                     placeholder="Sets"
                                     value={exercise.sets}
                                     onChange={(e) => this.QGetTextFromField(e, id)}
+                                    required
                                   />
                                 </div>
                                 <div className="col-md-3">
@@ -213,9 +238,15 @@ class AllWorkoutsView extends React.Component{
                                     name="reps"
                                     placeholder="Reps"
                                     value={exercise.reps}
+                                    required
                                     onChange={(e) => this.QGetTextFromField(e, id)}
                                   />
                                 </div>
+                                {
+                                    id===0 ? "" : (<button type="button" className="btn btn-primary col-md-1" onClick={ () => {this.QRemoveField(id)}}>
+                                    Remove
+                                </button>)
+                                }
                               </div>
                             </div>
                           ))}
