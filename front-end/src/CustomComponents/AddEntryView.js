@@ -10,7 +10,10 @@ class AddEntryView extends Component {
     super(props);
     this.state = {
       exercises: [],
-      showDialog: false
+      showDialog: false,
+      workout:{
+        name:''
+      }
     };
   }
   QSetHomeInParent = () => {
@@ -31,6 +34,14 @@ class AddEntryView extends Component {
         console.log(err);
     })
   }
+
+  QHandleWorkoutSelect = (id,workout_name) => {
+    console.log("wk id from parent" +id+workout_name)
+    this.setState({
+      workout:{name:workout_name}
+    })
+  }
+
   render() {
     const data = this.state.exercises;
     return (
@@ -126,19 +137,10 @@ class AddEntryView extends Component {
                       <input
                         type="text"
                         className="form-control"
-                        name="description"
-                       
-                        placeholder="Description"
-                        required
-                      />
-                    </div>
-                    <div className="col-12">
-                      <input
-                        type="text"
-                        className="form-control"
                         name="workout_id"
-                       
-                        placeholder="Workout ID"
+                        value={this.state.workout.name}
+                        placeholder="Workout"
+                        readOnly
                       />
                     </div>
                     <div className="col-12">
@@ -166,6 +168,7 @@ class AddEntryView extends Component {
             </form>
             { this.state.showDialog ? <WorkoutSelectDialog onClose={() => this.setState({showDialog:false})} 
                QSetHomeFromChild={this.QSetHomeInParent} QIDFromChild={this.QSetViewInParent}
+               QWorkoutSelectDialog={this.QHandleWorkoutSelect}
               /> : ""}
           </div>
         </div>

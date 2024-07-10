@@ -113,7 +113,8 @@ class AllWorkoutsView extends React.Component{
             .then(response=>{
             console.log("Sent to server...")
             console.log(response.status)
-            this.setState({update:true})
+            this.toggleDialog();
+            this.setState({update:true});
             })
             .catch(err=>{
             console.log(err)

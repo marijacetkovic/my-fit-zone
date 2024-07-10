@@ -7,8 +7,10 @@ class WorkoutSelectDialog extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            workouts: []
+            workouts: [],
+            exercise_id: ''
         }
+        this.handleWorkoutSelect=this.handleWorkoutSelect.bind(this)
     }
     QSetHomeInParent = () => {
       this.props.QSetHomeFromChild();
@@ -16,8 +18,9 @@ class WorkoutSelectDialog extends React.Component{
     QSetViewInParent = (obj) => {
       this.props.QIDFromChild(obj);
   }
-    handleWorkoutSelect(id){
-        console.log(id+"wk is chosen")
+    handleWorkoutSelect(id,name){
+      console.log("id in dialog "+id)
+        this.props.QWorkoutSelectDialog(id,name)      
     }
 
     componentDidMount(){
@@ -44,20 +47,17 @@ class WorkoutSelectDialog extends React.Component{
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Choose a workout</h1>
       </div>
       <div class="modal-body">
       <div className='row justify-content-center'>
             { data.length>0 ? 
             data.map((d)=> (
-            <WorkoutCard handleSelect={this.handleWorkoutSelect} workoutData={d} class="card col-10 col-sm-2 col-md-2 col-lg-2 mx-2 my-2"/>))
+            <WorkoutCard handleSelect={this.handleWorkoutSelect} 
+            closeDialog={this.props.onClose}
+            workoutData={d} class="card col-10 col-sm-2 col-md-2 col-lg-2 mx-2 my-2"/>))
             : ""}
             </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" onClick={()=>this.props.onClose()} class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>

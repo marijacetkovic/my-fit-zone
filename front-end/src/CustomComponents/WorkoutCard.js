@@ -5,13 +5,17 @@ class WorkoutCard extends React.Component
   constructor(props){
     super(props);
     this.state = {
-      id: this.props.workoutData?.workout?.id || 0
+      id: this.props.workoutData?.workout?.id || 0,
+      name: this.props.workoutData?.workout?.name
     }
   }
   handleSelect = () => {
     console.log("manja")
     if(this.props.handleSelect){
-       this.props.handleSelect(this.state.id)
+       this.props.handleSelect(this.state.id, this.state.name)
+       if(this.props.closeDialog){
+        this.props.closeDialog()
+      }
     }
   }
   handleDelete = () => {
