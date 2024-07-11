@@ -38,12 +38,12 @@ class HomeView extends React.Component {
                     )}
                     <div className="d-grid gap-4 d-sm-flex justify-content-sm-center">
                     {user.logged ? (
-                        <button type="button"  onClick={()=>this.QUnSetHomeInParent()} className="btn btn-primary btn-lg px-4 gap-3">Continue</button>
+                        <button type="button"  onClick={()=>this.QUnSetHomeInParent()} className="btn btn-outline-primary btn-lg px-4 gap-3">Continue</button>
                     ) : (<div>
                         <button type="button"   onClick={() => this.QSetViewInParent({ page: 'signup' })} 
-                        className="btn btn-primary btn-lg px-4 gap-3 me-1">Register</button>
+                        className="btn btn-outline-primary btn-lg px-4 gap-3 me-1">Register</button>
                         <button type="button" onClick={()=>
-                            this.QSetViewInParent({page:'login'})} className="btn btn-primary btn-lg px-4 gap-3">Already a member?</button>                    
+                            this.QSetViewInParent({page:'login'})} className="btn btn-outline-primary btn-lg px-4 gap-3">Already a member?</button>                    
                         </div>)}
                     </div>
                 </div>

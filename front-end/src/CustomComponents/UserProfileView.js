@@ -7,16 +7,16 @@ class UserProfileView extends React.Component
   constructor(props){
     super(props);
     this.state = {
-      profile:true,
-      userProfile:{}
+      userProfile:{},
+      showDialog: false
     }
   }
 
   saveImg(event){
-    const data = new FormData() ;
+    const data = new FormData();
     data.append('file', event.target.files[0]);
     this.setState({img:data})
-    console.log(this.state.img)
+    console.log(this.state.img[0].name)
   }
 
   QGetTextFromField=(e)=>{
@@ -28,54 +28,68 @@ class UserProfileView extends React.Component
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://88.200.63.148:1046/exercise/',{
-            height:this.state.userProfile.height,
-            weight:this.state.userProfile.weight,
-            cal_intake:this.state.userProfile.calintake,
-            img:this.state.img
-          },  { withCredentials: true })
-          .then(response=>{
-            console.log("Sent to server...")
-            console.log(response.status)
-            this.setState({update:true})
-          })
-          .catch(err=>{
-            console.log(err)
-          })
+        console.log(this.state.userProfile)
+        // axios.post('http://88.200.63.148:1046/exercise/',{
+        //     height:this.state.userProfile.height,
+        //     weight:this.state.userProfile.weight,
+        //     cal_intake:this.state.userProfile.calintake,
+        //     img:this.state.img
+        //   },  { withCredentials: true })
+        //   .then(response=>{
+        //     console.log("Sent to server...")
+        //     console.log(response.status)
+        //     this.setState({update:true})
+        //   })
+        //   .catch(err=>{
+        //     console.log(err)
+        //   })
     }  
+    toggleDialog = () => {
+      this.setState(prev => ({
+          showDialog: !prev.showDialog 
+      }))
+  }
 
+  
   render()
   {
     const profile = this.state.profile;
-    return(<div>
-      {profile ? (<div className='mt-5'>
+    const user = this.props.user;
+    return(<div style={{width:'65vw'}}>
+      <div className='mt-5'>
         <div className="mx-auto card col-md-6">
         <div className="card-header bg-primary text-white">
-            User Profile Details
         </div>
         <div className="card-body">
             <div className="text-center mb-3">
             <img src="https://via.placeholder.com/150" className="rounded-circle" alt="User Avatar" />
             </div>
-            <h5 className="card-title text-center mb-3">John Doe</h5>
-            <div className="d-flex justify-content-between mb-3">
-            <p className="card-text">Height: 180 cm
+            <h5 className="card-title text-center mb-3">{user.name} {user.surname}</h5>
+            <div className="container mx-auto">
+            <p className="card-text">Current streak: 0
             </p>
-            <p className="card-text">Weight: 75 kg</p>
+            <p className="card-text">Longest Streak: 0</p>
+            <p className="card-text">Total Entries: 0</p>
             </div>
-            <p className="card-text">Daily Caloric Intake: 2000 kcal</p>
-            <a href="#" className="btn btn-primary w-100">Edit Profile</a>
+            <button className="btn btn-primary w-100 mt-2" onClick={this.toggleDialog}>Edit Profile</button>
         </div>
+  
+      </div>
     </div>
-
-    </div>) : 
-    (<div className='container d-flex justify-content-center align-items-center' style={{ height: '33vh'}}>
-      <div className="dropdown">
-        <button className="btn btn-secondary mt-3" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Add profile
-        </button>
-        <div className="dropdown-menu mt-1 me-5 p-4" aria-labelledby="dropdownMenuButton" style={{ border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
-          <form>
+        {
+          this.state.showDialog?  (
+            <div>
+<div class="modal show" style={{ display: 'block' }}>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit profile</h1>
+      </div>
+      <div class="modal-body">
+      <div className='row justify-content-center'>
+             
+      <div className="container">
+          <form onSubmit={this.handleSubmit}>
             <div className="form-group mb-3">
               <label htmlFor="height">Height</label>
               <input
@@ -118,10 +132,15 @@ class UserProfileView extends React.Component
             </button>
           </form>
         </div>
+
+            </div>
       </div>
     </div>
-    )}
-    
+  </div>
+            </div>
+            </div>
+          )   : ""
+        }
 </div>)
   }
 }

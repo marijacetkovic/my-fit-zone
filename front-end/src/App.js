@@ -52,7 +52,7 @@ class App extends React.Component {
         case "login":
             return <LoginView QUserFromChild={this.QSetUser} QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
         case "profile":
-            return logged ? <UserProfileView /> : <UnauthorizedView />;
+            return logged ? <UserProfileView user={this.state.user} /> : <UnauthorizedView />;
         case "unauthorized":
             return <UnauthorizedView QIDFromChild={this.QSetView} />
         default:
