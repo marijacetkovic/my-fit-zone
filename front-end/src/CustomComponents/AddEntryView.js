@@ -13,7 +13,9 @@ class AddEntryView extends Component {
       showDialog: false,
       workout:{
         name:''
-      }
+      },
+      entry:{},
+      img:new FormData()
     };
   }
   QSetHomeInParent = () => {
@@ -33,22 +35,67 @@ class AddEntryView extends Component {
     .catch(err => {
         console.log(err);
     })
+  } 
+
+
+  QGetTextFromField=(e)=>{
+    this.setState(prevState=>({
+        entry:{...prevState.entry,[e.target.name]:e.target.value}
+    }))
+    console.log(this.state)
+    console.log(this.state.entry)
   }
+
 
   QHandleWorkoutSelect = (id,workout_name) => {
     console.log("wk id from parent" +id+workout_name)
     this.setState({
-      workout:{name:workout_name}
+      workout:{id:id,name:workout_name}
     })
   }
+  saveImg(event){
+    const data = new FormData();
+    data.append('file', event.target.files[0]);
+    this.setState({img:data})
+  }
 
+    handleSubmit = (e) => {
+      e.preventDefault();
+      const formData = this.state.img;
+
+      const requestData = {
+        title: this.state.entry.duration,
+        duration: this.state.entry.duration,
+        cal_burned: this.state.entry.cal_burned,
+        cal_consumed: this.state.entry.cal_consumed,
+        hours_slept: this.state.entry.hours_slept,
+        water_intake: this.state.entry.water_intake,
+        workout_id: this.state.workout.id,
+        description: this.state.entry.description
+      };
+      formData.append('data', JSON.stringify(requestData));
+
+      axios.post('http://88.200.63.148:1046/entry/',formData, {
+          headers: {
+            "content-type": "multipart/form-data"
+          },
+          withCredentials: true}        
+          )
+          .then(response=>{
+          console.log("Sent to server...")
+          console.log(response)
+          
+          })
+          .catch(err=>{
+          console.log(err)
+          })
+  }  
   render() {
-    const data = this.state.exercises;
     return (
       <div className="container mt-2">
         <div className="col-9 col-sm-10">
           <div className="card shadow">
-            <form>
+            <form onSubmit={this.handleSubmit}>
               <div className="card-header">
                 <input
                   type="text"
@@ -56,20 +103,26 @@ class AddEntryView extends Component {
                   name="title"
                   style={{ fontWeight: 'bold', fontSize: '1.25rem' }}
                   required
+                  placeholder='Title'
+                  onChange={this.QGetTextFromField}
                 />
                 <input
                   type="date"
                   className="form-control mt-2"
                   name="subtitle"
-                  required
+                  value={new Date().toISOString().split('T')[0]}
+                  disabled
                 />
               </div>
               <div className="card-body">
                 <textarea
                   className="form-control"
-                  name="text"
-                  rows="3"
+                  name="description"
+                  rows="8"
                   required
+                  onChange={this.QGetTextFromField}
+
+                  placeholder="Tell us about your daily activity."
                 ></textarea>
                 <div className="mt-3">
                   <div className="row row-cols-md-auto g-3">
@@ -78,9 +131,11 @@ class AddEntryView extends Component {
                         type="number"
                         className="form-control"
                         name="duration"
-                       
+                        min="0" 
                         placeholder="Duration (minutes)"
                         required
+                        onChange={this.QGetTextFromField}
+
                       />
                     </div>
                     <div className="col-12">
@@ -88,9 +143,11 @@ class AddEntryView extends Component {
                         type="number"
                         className="form-control"
                         name="cal_burned"
-                        
+                        min="0" 
                         placeholder="Calories Burned"
                         required
+                        onChange={this.QGetTextFromField}
+
                       />
                     </div>
                     <div className="col-12">
@@ -98,9 +155,11 @@ class AddEntryView extends Component {
                         type="number"
                         className="form-control"
                         name="cal_consumed"
-                        
+                        min="0" 
                         placeholder="Calories Consumed"
                         required
+                        onChange={this.QGetTextFromField}
+
                       />
                     </div>
                     <div className="col-12">
@@ -108,8 +167,8 @@ class AddEntryView extends Component {
                         type="number"
                         className="form-control"
                         name="hours_slept"
-                        
-                       
+                        onChange={this.QGetTextFromField}
+                        min="0" 
                         placeholder="Hours Slept"
                         required
                       />
@@ -119,19 +178,21 @@ class AddEntryView extends Component {
                         type="number"
                         className="form-control"
                         name="water_intake"
-                        
+                        min="0" 
                         placeholder="Water Intake (ml)"
                         required
+                        onChange={this.QGetTextFromField}
+
                       />
                     </div>
                     <div className="col-12">
                       <input
-                        type="text"
+                        type="file"
                         className="form-control"
                         name="image"
-                        
-                        placeholder="Image URL"
-                      />
+                        placeholder="Image"
+                        onChange={(e) => this.saveImg(e)} 
+                        />
                     </div>
                     <div className="col-12">
                       <input
@@ -141,15 +202,6 @@ class AddEntryView extends Component {
                         value={this.state.workout.name}
                         placeholder="Workout"
                         readOnly
-                      />
-                    </div>
-                    <div className="col-12">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="event_id"
-                        
-                        placeholder="Event ID"
                       />
                     </div>
     

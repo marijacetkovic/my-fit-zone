@@ -1,3 +1,10 @@
+
+.formcontainer {
+  background: white; 
+  padding: 2vw;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(87, 133, 111, 0.25); 
+}
 .btn-outline-primary {
     color: #2d8e7e;
     border-color: #2d8e7e !important;    
@@ -15,6 +22,19 @@
     background-color: #2d8e7e !important; 
     border-color: #2d8e7e !important;       
 }
+.btn-primary:focus, .btn-outline-primary:focus{
+  outline: none !important;
+    box-shadow: 0 0 0 0.2rem rgba(34, 108, 96, 0.3) !important; 
+}
+.btn-secondary{
+  background-color: #6a968e;
+  border: none;
+}
+
+.btn-secondary:hover{
+  background-color: #2d796c;
+  border: none;
+}
 
 .nav-link{
   color: #62b2a5
@@ -22,8 +42,22 @@
 .nav-link:hover{
   color: #2d796c
 }
+.nav-link.active{
+  color: #fff !important;
+  background-color: #2d796c !important;
+}
 
-  
+.wk-icon:hover .wk-path, .ex-icon:hover .ex-path {
+  fill: #2d796c; 
+}
+.form-control:focus{
+  border: none !important;
+  box-shadow: 0 0 0 0.2rem rgba(34, 108, 96, 0.3) !important; 
+}
+
+.nav-link.active .wk-icon .wk-path, .nav-link.active .ex-icon .ex-path {
+  fill: #ffff;
+}
 .btn-primary:hover {
     color: white;
     background-color: #226c60 !important; 

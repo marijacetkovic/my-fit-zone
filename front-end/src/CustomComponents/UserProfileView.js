@@ -58,7 +58,7 @@ class UserProfileView extends React.Component
     return(<div style={{width:'65vw'}}>
       <div className='mt-5'>
         <div className="mx-auto card col-md-6">
-        <div className="card-header bg-primary text-white">
+        <div className="card-header text-white" style={{ backgroundColor: "#62b2a5" }}>  
         </div>
         <div className="card-body">
             <div className="text-center mb-3">
