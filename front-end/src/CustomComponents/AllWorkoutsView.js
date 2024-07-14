@@ -34,7 +34,9 @@ class AllWorkoutsView extends React.Component{
             ,{withCredentials: true})
           .then(response=>{
             console.log("Sent to server...")
-            console.log(response.status)
+            var updatedWorkouts = this.state.workouts;
+            updatedWorkouts = updatedWorkouts.filter(w=>w.workout.id!==id);
+            this.setState({workouts:updatedWorkouts})          
           })
           .catch(err=>{
             console.log(err)
@@ -159,8 +161,6 @@ class AllWorkoutsView extends React.Component{
     const data = this.state.workouts;
     const exerciseInput = this.state.exerciseInput;
     const exerciseData = this.state.exerciseData;
-    console.log("exercise data")
-    console.log(exerciseData[0])
     return(
         <div className='row'>
             <div className='row col-10 col-sm-10 justify-content-center'>
@@ -168,7 +168,7 @@ class AllWorkoutsView extends React.Component{
             data.map((d)=> (
             <WorkoutCard workoutData={d} class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2" delete={true}
             handleDelete={this.handleWorkoutDelete}/>))
-            : ""}
+            : "No workouts to display."}
             </div>
             <div class="dropdown col-2 col-sm-2 mt-3 ms-4">
   <button class="btn btn-secondary dropdown-toggle" type="button" onClick={this.toggleDialog}>
@@ -261,7 +261,7 @@ class AllWorkoutsView extends React.Component{
                   </div>
                 </div>
               </div>
-                ) : ""
+                ) :""
         }
 
   
