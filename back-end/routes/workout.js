@@ -31,28 +31,19 @@ workout.post('/', async (req, res, next) => {
     const {name, exercises} = req.body;
     const user_id = req.session.user.user_id;
     if(!name || exercises.length<1){
-        res.status(400).json({ message: 'Incomplete request body.' });
+       return res.status(400).json({ message: 'Incomplete request body.' });
     }
     try{
-        const queryResultWorkout = await db.addWorkout(name, user_id);
-        const workout_id = queryResultWorkout.insertId;
-        for (const exercise of exercises) {
-            const { sets, reps, exercise_id } = exercise;
-            console.log("exercise id "+exercise_id)
-    
-            if (!sets || !reps || !exercise_id) {
-            return res.status(400).json({ error: 'Invalid exercise data.' });
-            }
-    
-            await db.addWorkoutExercise(workout_id, sets, reps, exercise_id);
-        }
+        const queryResultWorkout = await db.addWorkout2(name, user_id, exercises);
+        //const workout_id = queryResultWorkout.insertId;
+        
         console.log(queryResultWorkout)
-        res.status(201).json({ workout_id: workout_id, message: 'Workout and exercises added successfully.' });
+        //workout_id: workout_id, 
+        res.status(201).json({message: 'Workout and exercises added successfully.' });
     }
     catch(err){
         console.log(err)
         res.sendStatus(500);
-
     }
 
 })
@@ -91,8 +82,12 @@ workout.get('/details/:id', async (req, res, next) => {
     const user_id = req.session.user.user_id;
 
     try{
+        var wkResult = await db.getIndividualWk(req.params.id);
         var queryResult = await db.getWorkoutExercises(req.params.id);
-        res.json(queryResult);
+        res.json({
+            workout:wkResult[0],
+            exercises:queryResult
+        });
     }
     catch(err){
         console.log(err);

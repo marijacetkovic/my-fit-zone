@@ -125,15 +125,15 @@ dataPool.allUserDiaryEntries=(id)=>{
 }
 
 //adds a new user diary entry
-dataPool.addDiaryEntry=(duration, cal_burned, cal_consumed, hours_slept, water_intake, 
-  image, description, workout_id, event_id, user_id)=>{
+dataPool.addDiaryEntry=(title,duration, cal_burned, cal_consumed, hours_slept, water_intake, 
+  image, description, workout_id, event_id, current_date, user_id)=>{
   //add foreign keys for linking diary entry with activity/event/workout 
   return new Promise ((resolve, reject)=>{
-    conn.query(`INSERT INTO DiaryEntry (duration, cal_burned, cal_consumed, 
-      hours_slept, water_intake, image, description, workout_id, event_id, user_id) 
-      VALUES (?,?,?,?,?,?,?)`,
-      [duration, cal_burned, cal_consumed, hours_slept, water_intake, image, 
-        description, workout_id, event_id, user_id], (err,res)=>{
+    conn.query(`INSERT INTO DiaryEntry (title,duration, cal_burned, cal_consumed, 
+      hours_slept, water_intake, image, description, workout_id, event_id, date, user_id) 
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+      [title,duration, cal_burned, cal_consumed, hours_slept, water_intake, image, 
+        description, workout_id, event_id, current_date, user_id], (err,res)=>{
       if (err) return reject(err);
       return resolve(res);
     })
@@ -163,6 +163,70 @@ dataPool.addWorkout=(name, user_id)=>{
       return resolve(res);
     })
   })
+}
+
+dataPool.addWorkout2 = (name, user_id, exercises) => {
+  return new Promise((resolve, reject) => {
+  //want to perform this insert as indivisible action either all or none
+  conn.beginTransaction((err) => {
+    if (err) return reject(err);
+
+    //get date
+    let date = new Date(); 
+    conn.query(`INSERT INTO Workout (name, date, user_id) 
+      VALUES (?,?,?)`,
+      [name, date, user_id], (err,workoutRes)=>{
+      if (err){
+        //if err rollback changes
+        conn.rollback(() => {
+          reject(err);
+        })
+      }
+      //if no err continue w transaction
+      else{
+        const workout_id = workoutRes.insertId;
+        if(exercises.length>0){
+          //make an array of exercise data to bulk insert
+          const queryData = exercises.map(e => 
+            [workout_id, e.sets, e.reps, e.exercise_id]);
+            conn.query(`INSERT INTO WorkoutExercise (workout_id, sets, reps, exercise_id)
+             VALUES ?`,
+              [queryData], (err,res)=>{
+                if(err){
+                  //if err rollback changes
+                  conn.rollback(() => {
+                    reject(err);
+                  })
+                }
+                else{
+                  conn.commit((err) => {
+                    if (err) 
+                      conn.rollback(() => {
+                        reject(err)
+                      })
+                    else 
+                      resolve({workout_id})
+                  })
+                }
+              }
+            )
+
+        }
+        else{
+          conn.commit((err) => {
+            if (err) 
+              conn.rollback(() => {
+                reject(err)
+              })
+            else
+              resolve({ workout_id })
+          })
+        }
+      }
+    })
+
+  })
+})
 }
 
 //deleting a workout
@@ -206,7 +270,6 @@ dataPool.addWorkoutExercise = (workout_id, sets, reps, exercise_id) => {
 //retreives exercises that are a part of given workout
 dataPool.getWorkoutExercises = (workout_id) => {
   return new Promise((resolve, reject) => {
-    //i might not even need this join
     conn.query(
       `SELECT * FROM Exercise e
       JOIN WorkoutExercise w on e.id = w.exercise_id
@@ -220,6 +283,23 @@ dataPool.getWorkoutExercises = (workout_id) => {
     );
   });
 };
+
+dataPool.getIndividualWk = (workout_id) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT * FROM Workout
+      WHERE id = ?
+      `,
+      [workout_id],
+      (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );
+  });
+};
+
+
 
 
 //exercises
@@ -291,12 +371,14 @@ dataPool.allExercises = (user_id) => {
   //user id should be differernt for admin and personal exercises - user id
   return new Promise((resolve, reject) => {
     conn.query(
-      `SELECT e.id, e.name, e.category
-      FROM Exercise e
-      INNER JOIN User u ON e.user_id = u.id
-      WHERE e.user_id = ? OR u.role = 'admin'
+      `SELECT e.id, e.name, e.category,
+       CASE WHEN f.exercise_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
+       FROM Exercise e
+       INNER JOIN User u ON e.user_id = u.id
+       LEFT JOIN FavoriteExercise f ON f.exercise_id = e.id AND f.user_id = ?
+       WHERE e.user_id = ? OR u.role = 'admin'
      `,
-      [user_id],
+      [user_id, user_id],
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);

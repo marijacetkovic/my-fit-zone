@@ -57,6 +57,7 @@ exercise.post('/', async (req, res) => {
 exercise.get('/favorite', async (req, res, next) => {
     //should retreive user id from session
     // check if req body is complete
+    console.log("in fav")
     if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User is not logged in." })
     }
@@ -68,7 +69,7 @@ exercise.get('/favorite', async (req, res, next) => {
         res.json(queryResult);
     }
     catch (err) {
-        console.log('Error favoriting exercise:', err);
+        console.log('Error getting favorite exercise:', err);
         res.sendStatus(500); 
     }
 
@@ -91,6 +92,7 @@ exercise.post('/favorite', async (req, res, next) => {
                 console.log("unsuccessful favorite");
                 return res.sendStatus(404); // unsuccessful
             }
+            console.log('success fav ex '+exercise_id)
             res.json(queryResult);
         }
         catch (err) {
@@ -115,9 +117,10 @@ exercise.delete('/:id', async (req, res, next) => {
         try{
             var queryResult = await db.deleteExercise(exercise_id, user_id);
             if (queryResult.affectedRows === 0) {
-                console.log("unsuccessful unfavorite");
+                console.log("unsuccessful delete");
                 return res.sendStatus(404); // unsuccessful
             }
+            
             res.json(queryResult);
         }
         catch (err) {
@@ -126,8 +129,10 @@ exercise.delete('/:id', async (req, res, next) => {
         }
     }
 });
-exercise.delete('/favorite', async (req, res, next) => {
-    const exercise_id = req.body.exercise_id;
+exercise.delete('/favorite/:id', async (req, res, next) => {
+    console.log("in delete")
+    const exercise_id = req.params.id;
+    console.log(exercise_id)
 
     if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User is not logged in." })
@@ -144,10 +149,11 @@ exercise.delete('/favorite', async (req, res, next) => {
                 console.log("unsuccessful unfavorite");
                 return res.sendStatus(404); // unsuccessful
             }
+            console.log('success unfav ex '+exercise_id)
             res.json(queryResult);
         }
         catch (err) {
-            console.log('Error favoriting exercise:', err);
+            console.log('Error unfavoriting exercise:', err);
             res.sendStatus(500); 
         }
     }

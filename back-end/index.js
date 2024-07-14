@@ -31,6 +31,7 @@ app.use(session({
 
 // static files
 app.use(express.static(path.join(__dirname, 'build')));
+app.use('/uploads', express.static('uploads'));
 
 // import routes
 const users = require('./routes/users');
