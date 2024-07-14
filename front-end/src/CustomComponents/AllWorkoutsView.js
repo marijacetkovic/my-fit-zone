@@ -2,7 +2,6 @@ import React from 'react'
 import WorkoutCard from './WorkoutCard'
 import axios from 'axios';
 import { API_URL } from '../Utils/Configuration';
-import debounce from 'lodash.debounce'
 
 class AllWorkoutsView extends React.Component{
     constructor(props){
@@ -20,7 +19,6 @@ class AllWorkoutsView extends React.Component{
             exerciseLimit:5,
             update:false
         }
-        this.handleFormChange = debounce(this.handleFormChange.bind(this), 300);
 
       }
       QSetHomeInParent = () => {
