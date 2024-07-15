@@ -88,6 +88,29 @@ dataPool.updateUserProfile = (id, height, weight, cal_intake) => {
     );});
 }
 
+dataPool.getUserStreak = (id) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `Select current_streak, max_streak, total_entries FROM UserProfile
+       WHERE user_id = ?`,
+      [id], (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+}
+
+dataPool.updateUserStreak = (id, current_streak, max_streak, total_entries) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `UPDATE UserProfile SET current_streak = ?, max_streak = ?, total_entries = ? WHERE user_id = ?`,
+      [current_streak, max_streak, total_entries, id], (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+}
+
 dataPool.getUserProfile = (userId) => {
   return new Promise((resolve, reject) => {
     conn.query(
@@ -98,6 +121,23 @@ dataPool.getUserProfile = (userId) => {
       }
     );});
 };
+
+dataPool.getLastEntryDate = (userId) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT date
+       FROM DiaryEntry
+       WHERE user_id = ?
+       ORDER BY date DESC
+       LIMIT 1`,
+      [userId], (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+};
+
+
 //delete user?
 //should be allowed only to delete himself / possibly admin should delete 
 dataPool.deleteUser = (id) => {
