@@ -34,13 +34,20 @@ users.post('/register', async (req, res, next) => {
                 console.log("unsuccessful registration");
                 return res.sendStatus(404); // unsuccessful
             }
-            res.json(queryResult);
-            console.log("successful registration");
+            try{
+                var queryResultProfile = await db.addUserProfile(queryResult.insertId,0,0,0,null,0,0,0);
+                res.json({registration:queryResult,profile:queryResultProfile});
+                console.log("successful registration");
+            }
+            catch(err){
+                console.log(err);
+                res.sendStatus(500);
+            }
             //res.sendStatus(200);
         }
         catch(err){
             console.log(err);
-            res.sendStatus(400);
+            res.sendStatus(500);
         }
     }
     else{
