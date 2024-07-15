@@ -19,32 +19,92 @@ conn.connect((err) => {
 let dataPool={}
 
 //users
+
+//add new user
 dataPool.addUser=(name,surname,role,email,password)=>{
   return new Promise ((resolve, reject)=>{
-    conn.query(`INSERT INTO user (name,surname,role,email,password) VALUES (?,?,?,?,?)`,
+    conn.query(`INSERT INTO User (name,surname,role,email,password) VALUES (?,?,?,?,?)`,
       [name, surname, role, email, password], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
 
-dataPool.addUserProfile=(id,height,weight,cal_intake)=>{
+dataPool.allUsers=()=>{
   return new Promise ((resolve, reject)=>{
-    //bmi calculation???
-    conn.query(`INSERT INTO UserProfile (height,weight,cal_intake,user_id) VALUES (?,?,?,?)`,
-      [height, weight, cal_intake, id], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+    conn.query(`SELECT * FROM User`, (err,res)=>{
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
+
+//authenticate user
+// encrypted passwords?? 
+dataPool.authUser=(email)=>{
+  return new Promise ((resolve, reject)=>{
+    conn.query('SELECT * FROM User WHERE email = ?', email, (err,res)=>{
+      if (err) return reject(err);
+      return resolve(res);
+    })
+  })
+}
+
+dataPool.assignAdmin=(id)=>{
+  return new Promise ((resolve, reject)=>{
+    conn.query('UPDATE User SET role = ? WHERE id = ?', ['admin', id], (err,res)=>{
+      if (err) return reject(err);
+      return resolve(res);
+    })
+  })
+}
+
+//establish user profiles for non admin users
+dataPool.addUserProfile=(id,height,weight,cal_intake,img,
+  current_streak, max_streak, total_entries)=>{
+  return new Promise ((resolve, reject) => {
+    conn.query(`INSERT INTO UserProfile (height,weight,cal_intake, 
+      img, current_streak, max_streak, 
+      total_entries,user_id) 
+      VALUES (?,?,?,?,?,?,?,?)`,
+      [height, weight, cal_intake, 
+        img, current_streak, max_streak,
+        total_entries, id], (err,res)=>{
+      if (err) return reject(err);
+      return resolve(res);
+    })
+  })
+}
+//update profile needed
+dataPool.updateUserProfile = (id, height, weight, cal_intake) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `UPDATE UserProfile SET height = ?, weight = ?, cal_intake = ? WHERE user_id = ?`,
+      [height, weight, cal_intake, id], (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+}
+
+dataPool.getUserProfile = (userId) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT * FROM UserProfile WHERE user_id = ?`,
+      [userId], (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+};
 //delete user?
+//should be allowed only to delete himself / possibly admin should delete 
 dataPool.deleteUser = (id) => {
   return new Promise((resolve, reject) => {
     conn.query(`DELETE FROM user WHERE id = ?`, [id],
       (err, res) => {
-        if (err) {return reject(err);}
+        if (err) return reject(err);
         return resolve(res);
       });
   });
@@ -58,58 +118,123 @@ dataPool.deleteUser = (id) => {
 dataPool.allUserDiaryEntries=(id)=>{
   return new Promise ((resolve, reject)=>{
     conn.query(`SELECT * FROM DiaryEntry where user_id = ?`,[id],(err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
 
 //adds a new user diary entry
-dataPool.addDiaryEntry=(duration, cal_burned, cal_consumed, hours_slept, water_intake, image, user_id)=>{
-  //i think i need multer for uploading images
+dataPool.addDiaryEntry=(title,duration, cal_burned, cal_consumed, hours_slept, water_intake, 
+  image, description, workout_id, event_id, current_date, user_id)=>{
   //add foreign keys for linking diary entry with activity/event/workout 
   return new Promise ((resolve, reject)=>{
-    conn.query(`INSERT INTO DiaryEntry (duration, cal_burned, cal_consumed, 
-      hours_slept, water_intake, image, user_id) 
-      VALUES (?,?,?,?,?,?,?)`,
-      [duration, cal_burned, cal_consumed, hours_slept, water_intake, image, user_id], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+    conn.query(`INSERT INTO DiaryEntry (title,duration, cal_burned, cal_consumed, 
+      hours_slept, water_intake, image, description, workout_id, event_id, date, user_id) 
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+      [title,duration, cal_burned, cal_consumed, hours_slept, water_intake, image, 
+        description, workout_id, event_id, current_date, user_id], (err,res)=>{
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
 
 //delete diary entry
-dataPool.deleteDiaryEntry = (id) => {
+dataPool.deleteDiaryEntry = (id, user_id) => {
   return new Promise((resolve, reject) => {
-    conn.query(`DELETE FROM DiaryEntry WHERE id = ?`, [id],
+    conn.query(`DELETE FROM DiaryEntry WHERE id = ? and user_id = ?`, [id,user_id],
       (err, res) => {
-        if (err) {return reject(err);}
+        if (err) return reject(err);
         return resolve(res);
       });
   });
 };
 
 //creating new workout
-dataPool.addWorkout=(id, name, user_id)=>{
+dataPool.addWorkout=(name, user_id)=>{
   return new Promise ((resolve, reject)=>{
     //get date
-    let date = new Date().toISOString().splice(0,10); //get YYYY-MM-DD
-    conn.query(`INSERT INTO Workout (id, name, date, user_id) 
-      VALUES (?,?,?,?)`,
-      [id, name, date, user_id], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+    let date = new Date(); //get YYYY-MM-DD
+    conn.query(`INSERT INTO Workout (name, date, user_id) 
+      VALUES (?,?,?)`,
+      [name, date, user_id], (err,res)=>{
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
 
-//deleting a workout
-dataPool.deleteWorkout = (id) => {
+dataPool.addWorkout2 = (name, user_id, exercises) => {
   return new Promise((resolve, reject) => {
-    conn.query(`DELETE FROM Workout WHERE id = ?`, [id],
+  //want to perform this insert as indivisible action either all or none
+  conn.beginTransaction((err) => {
+    if (err) return reject(err);
+
+    //get date
+    let date = new Date(); 
+    conn.query(`INSERT INTO Workout (name, date, user_id) 
+      VALUES (?,?,?)`,
+      [name, date, user_id], (err,workoutRes)=>{
+      if (err){
+        //if err rollback changes
+        conn.rollback(() => {
+          reject(err);
+        })
+      }
+      //if no err continue w transaction
+      else{
+        const workout_id = workoutRes.insertId;
+        if(exercises.length>0){
+          //make an array of exercise data to bulk insert
+          const queryData = exercises.map(e => 
+            [workout_id, e.sets, e.reps, e.exercise_id]);
+            conn.query(`INSERT INTO WorkoutExercise (workout_id, sets, reps, exercise_id)
+             VALUES ?`,
+              [queryData], (err,res)=>{
+                if(err){
+                  //if err rollback changes
+                  conn.rollback(() => {
+                    reject(err);
+                  })
+                }
+                else{
+                  conn.commit((err) => {
+                    if (err) 
+                      conn.rollback(() => {
+                        reject(err)
+                      })
+                    else 
+                      resolve({workout_id})
+                  })
+                }
+              }
+            )
+
+        }
+        else{
+          conn.commit((err) => {
+            if (err) 
+              conn.rollback(() => {
+                reject(err)
+              })
+            else
+              resolve({ workout_id })
+          })
+        }
+      }
+    })
+
+  })
+})
+}
+
+//deleting a workout
+dataPool.deleteWorkout = (workout_id, user_id) => {
+  return new Promise((resolve, reject) => {
+    conn.query(`DELETE FROM Workout WHERE id = ? and user_id = ?`, [workout_id, user_id],
       (err, res) => {
-        if (err) {return reject(err);}
+        if (err) return reject(err);
         return resolve(res);
       });
   });
@@ -118,21 +243,21 @@ dataPool.deleteWorkout = (id) => {
 //all workouts for a user
 dataPool.allUserWorkouts = (id) => {
   return new Promise((resolve, reject) => {
-    conn.query(`SELECT id, name FROM Workout WHERE user_id = ?`, [id],
+    conn.query(`SELECT id, name, date FROM Workout WHERE user_id = ?`, [id],
       (err, res) => {
-        if (err) {return reject(err);}
+        if (err) return reject(err);
         return resolve(res);
       });
   });
 };
 
 //connecting workout and exercise
-dataPool.addWorkoutExercise = (workout_id, exercise_id, sets, reps) => {
+dataPool.addWorkoutExercise = (workout_id, sets, reps, exercise_id) => {
   return new Promise((resolve, reject) => {
     conn.query(
-      `INSERT INTO WorkoutExercise (workout_id, exercise_id, sets, reps)
+      `INSERT INTO WorkoutExercise (workout_id, sets, reps, exercise_id)
        VALUES (?, ?, ?, ?)`,
-      [workout_id, exercise_id, sets, reps],
+      [workout_id, sets, reps, exercise_id],
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);
@@ -140,6 +265,8 @@ dataPool.addWorkoutExercise = (workout_id, exercise_id, sets, reps) => {
     );
   });
 };
+
+//get workout details ??
 //retreives exercises that are a part of given workout
 dataPool.getWorkoutExercises = (workout_id) => {
   return new Promise((resolve, reject) => {
@@ -156,6 +283,23 @@ dataPool.getWorkoutExercises = (workout_id) => {
     );
   });
 };
+
+dataPool.getIndividualWk = (workout_id) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT * FROM Workout
+      WHERE id = ?
+      `,
+      [workout_id],
+      (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );
+  });
+};
+
+
 
 
 //exercises
@@ -208,7 +352,7 @@ dataPool.removeFavoriteExercise = (user_id, exercise_id) => {
   });
 };
 
-dataPool.allUserFavoriteExercises = (user_id) => {
+dataPool.getUserFavoriteExercises = (user_id) => {
   return new Promise((resolve, reject) => {
     const query = `
     SELECT Exercise.id, Exercise.name
@@ -217,9 +361,7 @@ dataPool.allUserFavoriteExercises = (user_id) => {
     WHERE FavoriteExercise.user_id = ?
     `;
     conn.query(query, [user_id], (err, res) => {
-      if (err) {
-        return reject(err);
-      }
+      if (err) return reject(err);
       return resolve(res);
     });
   });
@@ -229,10 +371,14 @@ dataPool.allExercises = (user_id) => {
   //user id should be differernt for admin and personal exercises - user id
   return new Promise((resolve, reject) => {
     conn.query(
-      `SELECT Exercise.id, Exercise.name
-      FROM Exercise 
-      WHERE Exercise.user_id IN (-1,?)`,
-      [user_id],
+      `SELECT e.id, e.name, e.category,
+       CASE WHEN f.exercise_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
+       FROM Exercise e
+       INNER JOIN User u ON e.user_id = u.id
+       LEFT JOIN FavoriteExercise f ON f.exercise_id = e.id AND f.user_id = ?
+       WHERE e.user_id = ? OR u.role = 'admin'
+     `,
+      [user_id, user_id],
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);
@@ -242,11 +388,11 @@ dataPool.allExercises = (user_id) => {
 };
 
 //delete an exercise
-dataPool.deleteExercise = (id) => {
+dataPool.deleteExercise = (id, user_id) => {
   return new Promise((resolve, reject) => {
     conn.query(
-      `DELETE FROM Exercise WHERE id = ?`,
-      [id],
+      `DELETE FROM Exercise WHERE id = ? and user_id = ?`,
+      [id, user_id],
       (err, res) => {
         if (err) return reject(err);
         return resolve(res);
@@ -259,16 +405,42 @@ dataPool.deleteExercise = (id) => {
 //events
 
 //create new event
-dataPool.addEvent=(name,time,location,organization,description)=>{
+dataPool.addEvent=(name,time,location,organization,description, admin_id)=>{
   return new Promise ((resolve, reject)=>{
     //check role - only admins should add events
-    conn.query(`INSERT INTO event (name,time,location,organization,description) VALUES (?,?,?,?,?)`,
-      [name, time, location, organization, description], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+    conn.query(`INSERT INTO Event (name,time,location,organization,description,admin_id) VALUES (?,?,?,?,?,?)`,
+      [name, time, location, organization, description, admin_id], (err,res) => {
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
+
+//get all events 
+dataPool.allEvents = () => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT *
+      FROM Event `, (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+};
+
+dataPool.getEventById = (id) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT *
+      FROM Event
+      WHERE id = ? `, id, (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+};
+
+
 //remove event 
 
 //FOR ADMINS  - event management - deleting events, displaying signed up users, displaying most active users??
@@ -280,8 +452,8 @@ dataPool.addEventSignUp=(eventId, userId)=>{
     //should check capacity of the event 
     conn.query(`INSERT INTO EventSignup (s_event_id,s_user_id) VALUES (?,?)`,
       [eventId, userId], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
@@ -290,12 +462,28 @@ dataPool.addEventSignUp=(eventId, userId)=>{
 dataPool.removeEventSignUp=(eventId, userId)=>{
   return new Promise ((resolve, reject)=>{
     //should check capacity of the event 
-    conn.query(`DELETE FROM EventSignup WHERE event_id = ? AND user_id = ?`,
+    conn.query(`DELETE FROM EventSignup WHERE s_event_id = ? AND s_user_id = ?`,
       [eventId, userId], (err,res)=>{
-      if(err){return reject(err)}
-      return resolve(res)
+      if (err) return reject(err);
+      return resolve(res);
     })
   })
 }
+
+dataPool.getEventsForUser = (userId) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT e.id, e.name
+      FROM Event e
+      JOIN EventSignup es ON e.id = es.s_event_id
+      WHERE es.s_user_id = ?`,
+      userId,
+      (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );
+  });
+};
 
 module.exports = dataPool;
