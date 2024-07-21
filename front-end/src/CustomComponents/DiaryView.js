@@ -31,8 +31,9 @@ class DiaryView extends React.Component
     .catch(err => {
         console.log(err);
         if(err.response.status===401){
-            this.QSetHomeInParent();
             this.QSetViewInParent({page:"unauthorized"});
+            this.QSetHomeInParent();
+
         }
     })
   }
@@ -49,8 +50,9 @@ class DiaryView extends React.Component
         .catch(err => {
             console.log(err);
             if(err.response.status===401){
-                this.QSetHomeInParent();
                 this.QSetViewInParent({page:"unauthorized"});
+                this.QSetHomeInParent();
+
             }
         })
   }
@@ -61,16 +63,17 @@ class DiaryView extends React.Component
     <div className='container mt-2'>
     <div className="col-9 col-sm-10">
       {
-        entries.length>0 ? entries.slice().reverse().map(e=>{
+        entries.length>0 ? entries.slice().reverse().map((e,id)=>{
         return (
-          <div className="card shadow mb-2">
-        <div className="card-header">
+          <div key={id} className="card shadow mb-2">
+        <div className="card-header diaryCardHeader">
           <h5 className="card-title fw-bold">{e.title}</h5>
           <h6 className="card-subtitle mb-2">{e.date.split('T')[0]}</h6>
         </div>
         <div className="card-body">
           <p className="card-text">{e.description}</p>
-          <img src={`${API_URL}/uploads/${e.image}`} height={700} width={700}></img>
+          <img src={`${API_URL}/uploads/${e.image}`} style={{maxHeight:'700px', maxWidth:'700px'}}
+          className='mb-2'></img>
           <div className="card-footer text-muted d-flex justify-content-between align-items-center">
             <div className="btn-group">
               <button type="button" className="btn btn-sm btn-outline-primary">View</button>

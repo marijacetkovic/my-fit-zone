@@ -54,7 +54,7 @@ class SideBarView extends React.Component {
             <li className="nav-item">
             <a href="#" onClick={() => {this.QSetHomeInParent(); this.QSetViewInParent({ page: 'home' })}} className={`nav-link py-3 border-bottom rounded-0 ${this.state.active === 'home' ? 'active' : ""}`}  aria-label='MyFitZone' title="MyFitZone">
             <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="40" height="32" role='img'  fill="currentColor"  viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2"/>
+            <path fillRule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2"/>
             </svg>
         </a>
             </li>
@@ -62,7 +62,7 @@ class SideBarView extends React.Component {
             <a href="#" onClick={() => {this.QSetViewInParent({ page: 'addentry' })}} className={`nav-link py-3 border-bottom rounded-0 ${this.state.active === 'addentry' ? 'active' : ""}`} aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Entry" title="New Entry">
                 <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="24" height="24" role="img" fill="currentColor" class="bi bi-pencil-square" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
             </svg>
             </a>
             </li>

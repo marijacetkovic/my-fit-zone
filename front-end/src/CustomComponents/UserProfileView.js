@@ -8,16 +8,17 @@ class UserProfileView extends React.Component
     super(props);
     this.state = {
       userProfile:{},
-      showDialog: false
+      showDialog: false,
+      img: new FormData()
     }
   }
 
-  saveImg(event){
-    const data = new FormData();
-    data.append('file', event.target.files[0]);
-    this.setState({img:data})
-    console.log(this.state.img[0].name)
-  }
+    saveImg(event){
+      const data = new FormData();
+      data.append('file', event.target.files[0]);
+      this.setState({img:data})
+      //console.log(this.state.img[0].name)
+    }
 
   QGetTextFromField=(e)=>{
     this.setState(prevState=>({
@@ -29,20 +30,28 @@ class UserProfileView extends React.Component
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state.userProfile)
-        // axios.post('http://88.200.63.148:1046/exercise/',{
-        //     height:this.state.userProfile.height,
-        //     weight:this.state.userProfile.weight,
-        //     cal_intake:this.state.userProfile.calintake,
-        //     img:this.state.img
-        //   },  { withCredentials: true })
-        //   .then(response=>{
-        //     console.log("Sent to server...")
-        //     console.log(response.status)
-        //     this.setState({update:true})
-        //   })
-        //   .catch(err=>{
-        //     console.log(err)
-        //   })
+        const {height, weight, cal_intake} = this.state.userProfile;
+        const formData = this.state.img;
+      const requestData = {
+        height: height,
+        weight: weight,
+        cal_intake: cal_intake
+      };
+      formData.append('data', JSON.stringify(requestData));
+      try {
+        const response = axios.post(API_URL+'/users/profile', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true 
+        });
+
+        console.log('Profile updated successfully:', response.data);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        
+      }
     }  
     toggleDialog = () => {
       this.setState(prev => ({
