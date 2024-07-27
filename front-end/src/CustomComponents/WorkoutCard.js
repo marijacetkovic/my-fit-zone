@@ -38,7 +38,7 @@ class WorkoutCard extends React.Component
         onClick={this.handleSelect}
         style={{ border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
         <div className="card-body">
-          <h5 className="card-title fw-bold">{data.name}</h5>
+          <h5 className="card-title fw-bold text-black">{data.name}</h5>
           <h6 className="card-subtitle mb-2 text-muted">{data.date?.split('T')[0]}</h6>
           <ul className="list-group list-group-flush">
             { exercises.length>0 ? exercises.map((e) => (

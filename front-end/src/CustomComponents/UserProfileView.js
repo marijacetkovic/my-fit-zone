@@ -8,16 +8,38 @@ class UserProfileView extends React.Component
     super(props);
     this.state = {
       userProfile:{},
-      showDialog: false
+      showDialog: false,
+      img: new FormData(),
+      profilePicture: ""
     }
   }
 
-  saveImg(event){
-    const data = new FormData();
-    data.append('file', event.target.files[0]);
-    this.setState({img:data})
-    console.log(this.state.img[0].name)
+  componentDidMount = () => {
+    axios.get(API_URL+'/users/profile', { withCredentials: true })
+        .then(response => {
+            console.log(response.data);
+            const profile = response.data[0]
+            const picture = profile.img
+            this.setState({
+              userProfile: response.data[0],
+              profilePicture: `${API_URL}/uploads/${picture}`
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            if(err.response.status===401){
+                this.QSetHomeInParent();
+                this.QSetViewInParent({page:"unauthorized"});
+            }
+        })
   }
+
+  saveImg(event){
+      const data = new FormData();
+      data.append('file', event.target.files[0]);
+      this.setState({img:data})
+      //console.log(this.state.img[0].name)
+    }
 
   QGetTextFromField=(e)=>{
     this.setState(prevState=>({
@@ -29,20 +51,28 @@ class UserProfileView extends React.Component
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state.userProfile)
-        // axios.post('http://88.200.63.148:1046/exercise/',{
-        //     height:this.state.userProfile.height,
-        //     weight:this.state.userProfile.weight,
-        //     cal_intake:this.state.userProfile.calintake,
-        //     img:this.state.img
-        //   },  { withCredentials: true })
-        //   .then(response=>{
-        //     console.log("Sent to server...")
-        //     console.log(response.status)
-        //     this.setState({update:true})
-        //   })
-        //   .catch(err=>{
-        //     console.log(err)
-        //   })
+        const {height, weight, cal_intake} = this.state.userProfile;
+        const formData = this.state.img;
+        const requestData = {
+          height: height,
+          weight: weight,
+          cal_intake: cal_intake
+        };
+      formData.append('data', JSON.stringify(requestData));
+      try {
+        const response = axios.post(API_URL+'/users/profile', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true 
+        });
+        this.toggleDialog()
+        console.log('Profile updated successfully:', response.data);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+        
+      }
     }  
     toggleDialog = () => {
       this.setState(prev => ({
@@ -53,93 +83,108 @@ class UserProfileView extends React.Component
   
   render()
   {
-    const profile = this.state.profile;
+    const profile = this.state.userProfile;
     const user = this.props.user;
     return(<div style={{width:'65vw'}}>
-      <div className='mt-5'>
-        <div className="mx-auto card col-md-6">
-        <div className="card-header text-white" style={{ backgroundColor: "#62b2a5" }}>  
-        </div>
-        <div className="card-body">
-            <div className="text-center mb-3">
-            <img src="https://via.placeholder.com/150" className="rounded-circle" alt="User Avatar" />
-            </div>
-            <h5 className="card-title text-center mb-3">{user.name} {user.surname}</h5>
-            <div className="container mx-auto">
-            <p className="card-text">Current streak: 0
-            </p>
-            <p className="card-text">Longest Streak: 0</p>
-            <p className="card-text">Total Entries: 0</p>
-            </div>
-            <button className="btn btn-primary w-100 mt-2" onClick={this.toggleDialog}>Edit Profile</button>
-        </div>
-  
-      </div>
+      <div className='mt-5'>      
+      <div className="card shadow-sm" style={{ borderRadius: '15px' }}>
+  <div className="card-body p-4">
+    <div className="text-center mb-3">
+      {profile.img ? (
+        <img
+          src={this.state.profilePicture}
+          className="rounded-circle"
+          alt="User Avatar"
+          style={{ maxWidth: '200px', maxHeight: '200px' }}
+        />
+      ) : (
+        <img
+          src="https://via.placeholder.com/100"
+          className="rounded-circle"
+          alt="User Avatar"
+          style={{ maxWidth: '200px', maxHeight: '200px' }}
+        />
+      )}
+    </div>
+    <h5 className="card-title text-center mb-3">{user.name} {user.surname}</h5>
+    <div className="container">
+      <p className="card-text mb-2"><strong>Current streak:</strong> {profile.current_streak}</p>
+      <p className="card-text mb-2"><strong>Longest Streak:</strong> {profile.max_streak}</p>
+      <p className="card-text mb-2"><strong>Total Entries:</strong> {profile.total_entries}</p>
+      <p className="card-text mb-2"><strong>Height:</strong> {profile.height} cm</p>
+      <p className="card-text mb-2"><strong>Weight:</strong> {profile.weight} kg</p>
+      <p className="card-text mb-2"><strong>Caloric intake:</strong> {profile.cal_intake} kcal</p>
+    </div>
+    <button className="btn btn-primary w-100 mt-3" onClick={this.toggleDialog}>Edit Profile</button>
+  </div>
+</div>
+
     </div>
         {
           this.state.showDialog?  (
             <div>
-<div class="modal show" style={{ display: 'block' }}>
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit profile</h1>
+              <div className="modal show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+  <div className="modal-dialog">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h1 className="modal-title fs-5 text-black" id="exampleModalLabel">Edit Profile</h1>
+        <button type="button" className="btn-close" aria-label="Close" onClick={this.toggleDialog}></button>
       </div>
-      <div class="modal-body">
-      <div className='row justify-content-center'>
-             
-      <div className="container">
-          <form onSubmit={this.handleSubmit}>
-            <div className="form-group mb-3">
-              <label htmlFor="height">Height</label>
-              <input
-                type="number"
-                className="form-control"
-                name="height"
-                placeholder=""
-                onChange={(e) => this.QGetTextFromField(e)}
-              />
-            </div>
-            <div className="form-group mb-3">
-              <label htmlFor="weight">Weight</label>
-              <input
-                type="number"
-                className="form-control"
-                name="weight"
-                placeholder=""
-                onChange={(e) => this.QGetTextFromField(e)}
-              />
-            </div>
-            <div className="form-group mb-3">
-              <label htmlFor="calintake">Caloric intake</label>
-              <input
-                type="number"
-                className="form-control"
-                name="calintake"
-                placeholder=""
-                onChange={(e) => this.QGetTextFromField(e)}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="img" className="form-label">Profile picture</label>
-              <input className="form-control" 
-                     type="file" 
-                     name="img" 
-                     onChange={(e) => this.saveImg(e)} />
-            </div>
-            <button type="submit" className="btn btn-primary mt-2 w-100">
-              Submit
-            </button>
-          </form>
+      <div className="modal-body">
+        <div className="row justify-content-center">
+          <div className="col-12">
+            <form onSubmit={this.handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="height" className="form-label text-black">Height</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="height"
+                  placeholder={profile.height}
+                  onChange={(e) => this.QGetTextFromField(e)}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="weight" className="form-label text-black">Weight</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="weight"
+                  placeholder={profile.weight}
+                  onChange={(e) => this.QGetTextFromField(e)}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="cal_intake" className="form-label text-black">Caloric Intake</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="cal_intake"
+                  placeholder={profile.cal_intake}
+                  onChange={(e) => this.QGetTextFromField(e)}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="img" className="form-label text-black">Profile Picture</label>
+                <input
+                  className="form-control"
+                  type="file"
+                  name="img"
+                  onChange={(e) => this.saveImg(e)}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary mt-2 w-100">
+                Submit
+              </button>
+            </form>
+          </div>
         </div>
-
-            </div>
       </div>
     </div>
   </div>
-            </div>
-            </div>
-          )   : ""
+</div>
+
+</div>)   : ""
         }
 </div>)
   }

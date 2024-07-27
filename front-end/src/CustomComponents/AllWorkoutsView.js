@@ -175,11 +175,11 @@ class AllWorkoutsView extends React.Component{
   </button>
         {
             this.state.showDialog ? (
-                <div className="modal show" style={{ display: 'block' }}>
+                <div className="modal show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
                 <div className="modal-dialog modal-xl">
                   <div className="modal-content">
                     <div className="modal-header">
-                      <h1 className="modal-title fs-5" id="exampleModalLabel">Add Workout</h1>
+                      <h1 className="modal-title fs-5 text-black" id="exampleModalLabel">Add Workout</h1>
                       <button type="button" className="btn-close" onClick={this.toggleDialog} data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">

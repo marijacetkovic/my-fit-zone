@@ -63,3 +63,15 @@
     background-color: #226c60 !important; 
     border-color: #226c60 !important;    
   }
+  body{
+    background-color: black;
+    color:white;
+  }
+  .container{
+    color:black
+  }
+/* 
+  .diaryCardHeader{
+    background-color: #226c6079;
+    color: white;
+  } */
