@@ -1,7 +1,8 @@
 const express= require("express")
 const entry = express.Router();
 const db = require('../db/conn.js')
-const multer = require("multer")
+const multer = require("multer");
+
 const storage = multer.diskStorage({
     destination: (req, file, callBack) => {
         callBack(null, 'uploads')
@@ -51,39 +52,63 @@ entry.post('/', upload_dest.single('file'), async (req, res) => {
      if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User is not logged in." })
     }
+    const user_id = req.session.user.user_id;
 
     //check if users made the daily post 
     //retreive date of last entry from db
+    var currentStreak, maxStreak, totalEntries = 0;
+   // const dateResult = await db.getLastEntryDate(user_id);
+    //const checkedIn = new Date(dateResult[0].date);
+    var checkedIn = new Date();
+    checkedIn.setDate(checkedIn.getDate()+3);
+    console.log(checkedIn)
+    const currentDate = new Date();
+    console.log(checkedIn.toDateString())
+    console.log(currentDate.toDateString())
+    if(checkedIn.toDateString()==currentDate.toDateString()){
+        console.log("alr entered daily")
+        return res.status(400).json({message: 'You have already entered the daily journal entry.'})
+    }
+    //check time if days passed without entry, reset streak
+    let nextDay = new Date(checkedIn);
+    nextDay.setDate(nextDay.getDate() + 1);
 
-    // checkedIn = new Date();
-    // currentDate = new Date();
-    // if(checkedIn.day==currentDate.day){
-    //     return res.status(400).json({message: 'You have already entered the daily journal entry.'})
-    // }
-    // //check time if days passed wo entry reset streak
+    // if its the next day update, if not then more than 1 day passed
+    if (nextDay.toDateString() === currentDate.toDateString()) {
+        // update streak
+        currentStreak++;
+    } else {
+        // more than one day passed reset streak
+        console.log("missed streak")
+        currentStreak = 1;
+    }
 
-    // if(checkedIn-currentDate>24) currentStreak = 0 
-
-    // //else update streak
-    // currentStreak++;
-    // if(currentStreak>maxStreak) maxStreak = currentStreak;
-    // totalEntries++;
+    if(currentStreak>maxStreak) maxStreak = currentStreak;
+    totalEntries++;
     //save change to db
     
     const { title,duration, cal_burned, cal_consumed, hours_slept, water_intake, workout_id, event_id, description } = JSON.parse(req.body.data);
-    const user_id = req.session.user.user_id;
     //var event_id = null;
     const image = req.file;
-    const currentDate = new Date();
 
-    const validEntry = duration && cal_burned && cal_consumed && hours_slept && water_intake;
+    const validEntry = title && duration && cal_burned && cal_consumed && hours_slept && water_intake;
     
     if (validEntry) {
         try {
-            var queryResult = await db.addDiaryEntry(title,duration, cal_burned, cal_consumed, 
-                hours_slept, water_intake, image.filename, description, workout_id, event_id,
+            var queryResultEntry = await db.addDiaryEntry(title,duration, cal_burned, cal_consumed, 
+                hours_slept, water_intake, image?.filename, description, workout_id, event_id,
                 currentDate, user_id);
-            res.json(queryResult);
+            try{
+                var queryResultStreak = await db.updateUserStreak(user_id, currentStreak, maxStreak, totalEntries);
+                res.json({
+                    entry: queryResultEntry,
+                    streak: queryResultStreak
+                });
+            }
+            catch(err) {
+                console.log(err);
+                res.sendStatus(500);
+            }
         } 
         catch(err) {
             console.log(err);
@@ -91,7 +116,7 @@ entry.post('/', upload_dest.single('file'), async (req, res) => {
         }
     } else {
         console.log("Incomplete request body");
-        res.sendStatus(400);
+        return res.status(400).json({message: 'Please check the required fields.'})
     }
 });
 

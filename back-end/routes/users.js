@@ -3,9 +3,6 @@ const users = express.Router();
 const db = require('../db/conn.js')
 const multer = require('multer');
 
-
-
-
 const storage = multer.diskStorage({
     destination: (req, file, callBack) => {
         callBack(null, 'uploads')
@@ -34,13 +31,20 @@ users.post('/register', async (req, res, next) => {
                 console.log("unsuccessful registration");
                 return res.sendStatus(404); // unsuccessful
             }
-            res.json(queryResult);
-            console.log("successful registration");
+            try{
+                var queryResultProfile = await db.addUserProfile(queryResult.insertId,0,0,0,null,0,0,0);
+                res.json({registration:queryResult,profile:queryResultProfile});
+                console.log("successful registration");
+            }
+            catch(err){
+                console.log(err);
+                res.sendStatus(500);
+            }
             //res.sendStatus(200);
         }
         catch(err){
             console.log(err);
-            res.sendStatus(400);
+            res.sendStatus(500);
         }
     }
     else{
@@ -132,14 +136,14 @@ users.get('/profile', async (req, res, next) => {
         res.json(queryResult);
     }
     catch (err) {
-        console.log('Error favoriting exercise:', err);
+        console.log('Error getting profile', err);
         res.sendStatus(500); 
     }
 })
 
 users.post('/profile', upload_dest.single('file'), async (req, res, next) => {
     //bmi calculation???
-    const {height, weight, cal_intake} = req.body;
+    const {height, weight, cal_intake} =  JSON.parse(req.body.data);
     const bmi = bmiCalc(height, weight);
     const img = req.file;
     
@@ -148,15 +152,11 @@ users.post('/profile', upload_dest.single('file'), async (req, res, next) => {
     }
     
     const user_id = req.session.user.user_id;
-    const max_streak = 0;
-    const current_streak = 0;
-    const total_entries = 0;
 
     if(height && weight){
         try{
-            var queryResult = await db.addUserProfile(user_id, height, weight, 
-                cal_intake, img, 
-                current_streak, max_streak, total_entries);
+            var queryResult = await db.updateUserProfile(user_id, height, weight, 
+                cal_intake, img?.filename);
             if (queryResult.affectedRows === 0) {
                 console.log("unsuccessful user profile creation");
                 return res.sendStatus(404); // unsuccessful
