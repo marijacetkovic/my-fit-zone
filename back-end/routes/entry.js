@@ -2,7 +2,7 @@ const express= require("express")
 const entry = express.Router();
 const db = require('../db/conn.js')
 const multer = require("multer");
-const { Console } = require("console");
+
 const storage = multer.diskStorage({
     destination: (req, file, callBack) => {
         callBack(null, 'uploads')

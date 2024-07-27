@@ -77,11 +77,11 @@ dataPool.addUserProfile=(id,height,weight,cal_intake,img,
   })
 }
 //update profile needed
-dataPool.updateUserProfile = (id, height, weight, cal_intake) => {
+dataPool.updateUserProfile = (id, height, weight, cal_intake, img) => {
   return new Promise((resolve, reject) => {
     conn.query(
-      `UPDATE UserProfile SET height = ?, weight = ?, cal_intake = ? WHERE user_id = ?`,
-      [height, weight, cal_intake, id], (err, res) => {
+      `UPDATE UserProfile SET height = ?, weight = ?, cal_intake = ?, img = ? WHERE user_id = ?`,
+      [height, weight, cal_intake, img, id], (err, res) => {
         if (err) return reject(err);
         return resolve(res);
       }
@@ -411,7 +411,7 @@ dataPool.allExercises = (user_id) => {
   //user id should be differernt for admin and personal exercises - user id
   return new Promise((resolve, reject) => {
     conn.query(
-      `SELECT e.id, e.name, e.category,
+      `SELECT e.id, e.name, e.category, e.description, e.video_url,
        CASE WHEN f.exercise_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorite
        FROM Exercise e
        INNER JOIN User u ON e.user_id = u.id
