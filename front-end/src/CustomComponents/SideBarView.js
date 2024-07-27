@@ -17,6 +17,24 @@ class SideBarView extends React.Component {
               trigger: 'hover' 
             });
         });
+
+        axios.get(API_URL+'/users/profile', { withCredentials: true })
+        .then(response => {
+            console.log(response.data);
+            const profile = response.data[0]
+            const picture = profile.img
+            this.setState({
+              userProfile: response.data[0],
+              profilePicture: `${API_URL}/uploads/${picture}`
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            if(err.response.status===401){
+                this.QSetHomeInParent();
+                this.QSetViewInParent({page:"unauthorized"});
+            }
+        })
     }
     QSetUserInParent = (obj) => {
         this.props.QUserFromChild(obj);
@@ -99,7 +117,7 @@ class SideBarView extends React.Component {
         </ul>
         <div className="dropdown border-top">
             <a href="#" style={{color:"#62b2a5"}} className="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://github.com/mdo.png" alt="mdo" width="24" height="24" className="rounded-circle" />
+            <img src={this.state.profilePicture} alt="mdo" width="24" height="24" className="rounded-circle" />
             </a>
             <ul className="dropdown-menu text-small shadow">
             <li><a className="dropdown-item" href="#">New project...</a></li>

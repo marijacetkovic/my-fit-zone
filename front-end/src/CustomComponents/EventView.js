@@ -7,7 +7,14 @@ class EventView extends React.Component
     constructor(props){
         super(props);
         this.state = {
-            events:[]
+            events:[],
+            eventImages : [
+              'https://yoganowchicago.com/wp-content/uploads/2021/06/beginners-yoga-class-BUQX8HA.jpg',
+              'https://wpamelia.com/wp-content/uploads/2021/09/launch.jpg',
+              'https://media.wired.com/photos/5cae8365eaad993a02ff5d1c/master/pass/bostonmarathon-947031426.jpg',
+              'https://treeoflifenutrition.com.au/wp-content/uploads/2024/02/workplace-or-corporate-nutrition-seminars.jpg',
+              'https://cdn.outsideonline.com/wp-content/uploads/2017/08/08/amateur-cyclists-mt-evans-colorado_s.jpg'
+              ]
         }
       }
       componentDidMount(){
@@ -26,17 +33,14 @@ class EventView extends React.Component
   {
     const data = this.state.events;
     return(
-    <div className='album py-5 bg-body-tertiary'>
+    <div className='album py-5 bg-body-tertiary me-5'>
         <div className='container'>
             <div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3'>
-        {data.length>0 ? data.map((d) => {return(
+        {data.length>0 ? data.map((d,id) => {return(
             <div className="col">
              <div className="card shadow-sm" key={d.id}>
-             <svg className="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
-               <title>Placeholder</title>
-               <rect width="100%" height="100%" fill="#55595c"></rect>
-               <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-             </svg>
+             <img src={this.state.eventImages[id]} className="card-img-top" 
+              style={{ width: '100%', height: '225px', objectFit: 'cover' }} />
              <div className="card-body">
                  <h5>{d.name}</h5>
                  <h6 className='text-muted'>{d.organization}</h6>

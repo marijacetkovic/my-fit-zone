@@ -47,7 +47,7 @@ class WorkoutSelectDialog extends React.Component{
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Choose a workout</h1>
+        <h1 class="modal-title fs-5 text-black" id="exampleModalLabel">Choose a workout</h1>
       </div>
       <div class="modal-body">
       <div className='row justify-content-center'>
