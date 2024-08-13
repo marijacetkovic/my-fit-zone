@@ -38,7 +38,8 @@ class LoginView extends React.Component{
             }
           })
           .catch(err=>{
-            console.log(err)
+            //console.log(err)
+            alert(err.response.data.message)
           })
     }     
   render()
@@ -51,22 +52,14 @@ class LoginView extends React.Component{
                 </svg>
         <h1 className="h3 text-center mb-3 fw-normal">Welcome back!</h1>
     
-        <div className="form-floating">
+        <div className="form-floating my-2 mt-4">
           <input type="email" className="form-control mb-1" required onChange={(e)=>this.QGetTextFromField(e)}  name='email' id="email" placeholder="name@example.com" />
           <label htmlFor="email">Email address</label>
         </div>
-        <div className="form-floating">
+        <div className="form-floating my-2">
           <input type="password" className="form-control" required onChange={(e)=>this.QGetTextFromField(e)}  name='password' id="password" placeholder="Password" />
           <label htmlFor="password">Password</label>
-        </div>
-      
-        <div className="form-check text-start my-3">
-          <input className="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault" />
-          <label className="form-check-label" htmlFor="flexCheckDefault">
-            Remember me
-          </label>
-        </div>
-        
+        </div>  
         <button className="btn btn-primary w-100 py-2" type="submit">Log in</button>
         
         <p className="mt-5 mb-3 text-center text-body-secondary">© MyFitZone</p>

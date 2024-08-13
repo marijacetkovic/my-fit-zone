@@ -22,7 +22,9 @@ class App extends React.Component {
     this.state = {
       isHome:true,
       CurrentPage:"home",
-      user:{}
+      user:{
+        logged:false
+      }
     }
   } 
 
@@ -38,7 +40,7 @@ class App extends React.Component {
         case "home":
             return <HomeView user={this.state.user} QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
         case "diary":
-            return logged ? <DiaryView /> : <UnauthorizedView />;
+            return logged ? <DiaryView QSetHomeFromChild={this.QSetHome} QIDFromChild={this.QSetView}/> : <UnauthorizedView />;
         case "events":
             return logged ? <EventView /> : <UnauthorizedView />;
         case "addentry":
@@ -56,7 +58,7 @@ class App extends React.Component {
         case "unauthorized":
             return <UnauthorizedView QIDFromChild={this.QSetView} />
         default:
-            return <HomeView />;
+            return <HomeView user={this.state.user} />;
     }
 };
 

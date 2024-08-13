@@ -18,6 +18,7 @@ class DiaryView extends React.Component
       entries:{},
       img:new FormData()
     };
+    
   }
 
   componentDidMount(){
@@ -36,6 +37,12 @@ class DiaryView extends React.Component
 
         }
     })
+  }
+  QSetViewInParent = (obj) => {
+    this.props.QIDFromChild(obj);
+  } 
+  QSetHomeInParent = () => {
+    this.props.QSetHomeFromChild();
   }
 
   getWorkoutForEntry(id){
@@ -77,10 +84,11 @@ class DiaryView extends React.Component
           className='mb-2'></img>) : ""}
           <div className="card-footer text-muted d-flex justify-content-between align-items-center">
             <div className="btn-group">
-              <button type="button" className="btn btn-sm btn-outline-primary">View</button>
-              <button type="button" className="btn btn-sm btn-outline-secondary">Edit</button>
               <div className="dropend">
-                <button  onClick={event=>{this.getWorkoutForEntry(e.workout_id)}} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button  onClick={event=>{this.getWorkoutForEntry(e.workout_id)}} className="btn btn-secondary mx-0 me-2" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" className="bi wk-icon" width="20" height="20" role="img"  viewBox="0 0 640 512">
+                <path fill="#ffffff" d="M96 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32V224v64V448c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V384H64c-17.7 0-32-14.3-32-32V288c-17.7 0-32-14.3-32-32s14.3-32 32-32V160c0-17.7 14.3-32 32-32H96V64zm448 0v64h32c17.7 0 32 14.3 32 32v64c17.7 0 32 14.3 32 32s-14.3 32-32 32v64c0 17.7-14.3 32-32 32H544v64c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32V288 224 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32zM416 224v64H224V224H416z"/></svg>
+                
                 </button>
                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{padding: '10px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
                   <div className="">
@@ -89,7 +97,10 @@ class DiaryView extends React.Component
                 </div>
               </div>
               <div className="dropend">
-                <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button className="btn btn-secondary" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+              </svg>
                 </button>
                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{padding: '10px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
                   <div className="">
@@ -104,7 +115,8 @@ class DiaryView extends React.Component
       </div>
         )}
         )
-      : "No entries to display."}
+      : 
+      <div style={{color:"white", textAlign:"center"}}>No entries to display. You can start by adding your first diary entry.</div>}
       
     </div>
   </div>

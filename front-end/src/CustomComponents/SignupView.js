@@ -31,7 +31,8 @@ class SignupView extends React.Component{
             }
           })
           .catch(err=>{
-            console.log(err)
+            console.log(err.response.data.message)
+            alert(err.response.data.message)
           })
     }   
     render()

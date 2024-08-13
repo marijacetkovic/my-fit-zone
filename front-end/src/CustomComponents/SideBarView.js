@@ -7,7 +7,8 @@ class SideBarView extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            active:'addentry'
+            active:'addentry',
+            profilePicture:"https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
         }
     }
     componentDidMount() {
@@ -20,13 +21,21 @@ class SideBarView extends React.Component {
 
         axios.get(API_URL+'/users/profile', { withCredentials: true })
         .then(response => {
+            console.log("USERPOFILEPUCRURE")
             console.log(response.data);
             const profile = response.data[0]
             const picture = profile.img
-            this.setState({
-              userProfile: response.data[0],
-              profilePicture: `${API_URL}/uploads/${picture}`
-            })
+            if(response.status===200){
+                this.setState({
+                    userProfile: response.data[0]
+                  })
+            }
+            if(picture!==null){
+                this.setState({
+                    profilePicture: `${API_URL}/uploads/${picture}`
+                  })
+            }
+            
         })
         .catch(err => {
             console.log(err);
@@ -117,13 +126,11 @@ class SideBarView extends React.Component {
         </ul>
         <div className="dropdown border-top">
             <a href="#" style={{color:"#62b2a5"}} className="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+           
             <img src={this.state.profilePicture} alt="mdo" width="24" height="24" className="rounded-circle" />
             </a>
             <ul className="dropdown-menu text-small shadow">
-            <li><a className="dropdown-item" href="#">New project...</a></li>
-            <li><a className="dropdown-item" href="#">Settings</a></li>
             <li><a className="dropdown-item" onClick={() => {this.QSetViewInParent({ page: 'profile' })}}>Profile</a></li>
-            <li><hr className="dropdown-divider" /></li>
             <li><a className="dropdown-item" onClick={this.handleLogout} href="#">Sign out</a></li>
             </ul>
         </div>

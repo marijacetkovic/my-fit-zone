@@ -115,9 +115,20 @@ class AllWorkoutsView extends React.Component{
             console.log(response.status)
             this.toggleDialog();
             this.setState({update:true});
+            
+            if(response.status===200){
+              alert("Successfully added workout.")
+            }
             })
             .catch(err=>{
             console.log(err)
+            if(err.response.status===401){
+              this.QSetHomeInParent();
+              this.QSetViewInParent({page:"unauthorized"});
+            }
+            else{
+              alert("Unsuccesful adding of the workout. Try again.")
+            }
             })
     }  
 
@@ -165,7 +176,7 @@ class AllWorkoutsView extends React.Component{
         <div className='row'>
             <div className='row col-10 col-sm-10 justify-content-center'>
             { data.length>0 ? 
-            data.map((d)=> (
+            data.slice().reverse().map((d)=> (
             <WorkoutCard workoutData={d} class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2" delete={true}
             handleDelete={this.handleWorkoutDelete}/>))
             : "No workouts to display."}
@@ -207,8 +218,9 @@ class AllWorkoutsView extends React.Component{
                                 <div className="col-md-5">
                                 <select 
                                         className="form-select" 
+                                        required
                                         onChange={(event) => this.QGetValueFromSelect(event, id)}                                    >
-                                        <option selected>Exercise {id+1}</option>
+                                        <option value="" disabled selected>Exercise {id+1}</option>
                                         {exerciseData.length > 0 ? (
                                         exerciseData.map((exercise) => (
                                             <option key={exercise.id} value={exercise.id}>
@@ -221,20 +233,24 @@ class AllWorkoutsView extends React.Component{
                                 </div>
                                 <div className="col-md-3">
                                   <input
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     name="sets"
                                     placeholder="Sets"
                                     value={exercise.sets}
+                                    min="1"
+                                    max="100"
                                     onChange={(e) => this.QGetTextFromField(e, id)}
                                     required
                                   />
                                 </div>
                                 <div className="col-md-3">
                                   <input
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     name="reps"
+                                    min="1"
+                                    max="10000"
                                     placeholder="Reps"
                                     value={exercise.reps}
                                     required
