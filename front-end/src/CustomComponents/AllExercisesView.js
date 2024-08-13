@@ -21,7 +21,7 @@ class AllExercisesView extends React.Component {
         })
     })
     .catch(err => {
-      if(err.response.status===401){
+      if(err?.response?.status===401){
         this.QSetHomeInParent();
         this.QSetViewInParent({page:"unauthorized"});
     }
@@ -53,8 +53,8 @@ class AllExercisesView extends React.Component {
           this.setState({exercises:updatedExercises})
         })
         .catch(err=>{
-          console.log(err)
-          if(err.response.status===401){
+          //console.log(err)
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
             this.QSetViewInParent({page:"unauthorized"});
         }
@@ -78,7 +78,7 @@ class AllExercisesView extends React.Component {
         })
         .catch(err=>{
           console.log(err)
-          if(err.response.status===401){
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
             this.QSetViewInParent({page:"unauthorized"});
         }
@@ -96,8 +96,8 @@ class AllExercisesView extends React.Component {
           this.setState({ exercises: updatedExercises });
         })
         .catch(err=>{
-          console.log(err)
-          if(err.response.status===401){
+          //console.log(err)
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
             this.QSetViewInParent({page:"unauthorized"});
         }
@@ -121,7 +121,7 @@ class AllExercisesView extends React.Component {
             }
           })
           .catch(err=>{
-            if(err.response.status===401){
+            if(err?.response?.status===401){
               this.QSetHomeInParent();
               this.QSetViewInParent({page:"unauthorized"});
           }
@@ -150,10 +150,10 @@ class AllExercisesView extends React.Component {
             console.log(data)
         })
         .catch(err => {
-          if(err.response.status===401){
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
             this.QSetViewInParent({page:"unauthorized"});
-          }
+        }
           else{
             alert("Unsuccesful adding of the exercise. Try again.")
 

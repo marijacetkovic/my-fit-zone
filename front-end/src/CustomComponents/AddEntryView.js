@@ -48,7 +48,7 @@ class AddEntryView extends Component {
         })
     })
     .catch(err => {
-        console.log(err);
+        //console.log(err);
     })
 
     // initialize tooltips
@@ -140,12 +140,12 @@ class AddEntryView extends Component {
 
           })
           .catch(err=>{
-          console.log(err)
-          if(err.response.status===401){
-            this.QSetViewInParent({page:"unauthorized"});
+          //console.log(err)
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
-            }
-          else if(err.response.status===400){
+            this.QSetViewInParent({page:"unauthorized"});
+        }
+          else if(err?.response?.status===400){
             alert("You have already entered the daily entry.")
           }
 

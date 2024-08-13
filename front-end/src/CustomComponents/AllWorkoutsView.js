@@ -40,7 +40,7 @@ class AllWorkoutsView extends React.Component{
           })
           .catch(err=>{
             console.log(err)
-            if(err.response.status===401){
+            if(err?.response?.status===401){
               this.QSetHomeInParent();
               this.QSetViewInParent({page:"unauthorized"});
           }
@@ -57,10 +57,10 @@ class AllWorkoutsView extends React.Component{
         })
         .catch(err => {
             console.log(err);
-            if(err.response.status===401){
-                this.QSetHomeInParent();
-                this.QSetViewInParent({page:"unauthorized"});
-            }
+            if(err?.response?.status===401){
+              this.QSetHomeInParent();
+              this.QSetViewInParent({page:"unauthorized"});
+          }
         })
 
         axios.get(API_URL+'/exercise/', { withCredentials: true })
@@ -72,10 +72,10 @@ class AllWorkoutsView extends React.Component{
         })
         .catch(err => {
             console.log(err);
-            if(err.response.status===401){
-                this.QSetHomeInParent();
-                this.QSetViewInParent({page:"unauthorized"});
-            }
+            if(err?.response?.status===401){
+              this.QSetHomeInParent();
+              this.QSetViewInParent({page:"unauthorized"});
+          }
         })
     }  
 
@@ -121,8 +121,8 @@ class AllWorkoutsView extends React.Component{
             }
             })
             .catch(err=>{
-            console.log(err)
-            if(err.response.status===401){
+            //console.log(err)
+            if(err?.response?.status===401){
               this.QSetHomeInParent();
               this.QSetViewInParent({page:"unauthorized"});
             }

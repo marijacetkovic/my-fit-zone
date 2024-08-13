@@ -31,11 +31,10 @@ class DiaryView extends React.Component
     })
     .catch(err => {
         console.log(err);
-        if(err.response.status===401){
-            this.QSetViewInParent({page:"unauthorized"});
-            this.QSetHomeInParent();
-
-        }
+        if(err?.response?.status===401){
+          this.QSetHomeInParent();
+          this.QSetViewInParent({page:"unauthorized"});
+      }
     })
   }
   QSetViewInParent = (obj) => {
@@ -55,12 +54,11 @@ class DiaryView extends React.Component
             })
         })
         .catch(err => {
-            console.log(err);
-            if(err.response.status===401){
-                this.QSetViewInParent({page:"unauthorized"});
-                this.QSetHomeInParent();
-
-            }
+            //console.log(err);
+            if(err?.response?.status===401){
+              this.QSetHomeInParent();
+              this.QSetViewInParent({page:"unauthorized"});
+          }
         })
   }
   render()

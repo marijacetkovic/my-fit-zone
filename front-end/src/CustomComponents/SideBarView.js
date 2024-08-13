@@ -38,8 +38,8 @@ class SideBarView extends React.Component {
             
         })
         .catch(err => {
-            console.log(err);
-            if(err.response.status===401){
+            //console.log(err);
+            if(err?.response?.status===401){
                 this.QSetHomeInParent();
                 this.QSetViewInParent({page:"unauthorized"});
             }
@@ -58,7 +58,7 @@ class SideBarView extends React.Component {
             })
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
         })
     this.QSetUserInParent({...null,logged:false})
     this.QSetHomeInParent(); 

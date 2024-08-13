@@ -39,7 +39,7 @@ class LoginView extends React.Component{
           })
           .catch(err=>{
             //console.log(err)
-            alert(err.response.data.message)
+            alert(err?.response?.data.message)
           })
     }     
   render()
