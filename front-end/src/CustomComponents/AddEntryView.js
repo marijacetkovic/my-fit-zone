@@ -11,6 +11,7 @@ class AddEntryView extends Component {
     this.state = {
       exercises: [],
       showDialog: false,
+      showResponse:false,
       showInspoDialog:false,
       workout:{
         name:''
@@ -18,8 +19,19 @@ class AddEntryView extends Component {
       entry:{},
       img:new FormData(),
       prompts:[],
-      textareaPlaceholder: "Tell us about your daily activity." 
+      textareaPlaceholder: "Tell us about your daily activity.",
+      response:{
+        title:"",
+        message:""
+      }
     };
+   
+  }
+
+  toggleResponseDialog = () => {
+    this.setState(prev => ({
+      showResponse: !prev.showResponse 
+    }))
   }
   QSetHomeInParent = () => {
     this.props.QSetHomeFromChild();
@@ -36,7 +48,7 @@ class AddEntryView extends Component {
         })
     })
     .catch(err => {
-        console.log(err);
+        //console.log(err);
     })
 
     // initialize tooltips
@@ -82,10 +94,18 @@ class AddEntryView extends Component {
       workout:{id:id,name:workout_name}
     })
   }
+
   saveImg(event){
     const data = new FormData();
     data.append('file', event.target.files[0]);
     this.setState({img:data})
+  }
+
+  removeWorkout = () => {
+    console.log("manja")
+    this.setState({
+      workout:{id:null,name:""}
+    })
   }
 
     handleSubmit = (e) => {
@@ -114,14 +134,21 @@ class AddEntryView extends Component {
           console.log("Sent to server...")
           console.log(response)
           
+          if(response.status===200){
+            this.QSetViewInParent({page:"diary"});
+          }
+
           })
           .catch(err=>{
-          console.log(err)
-          if(err.response.status===401){
-            this.QSetViewInParent({page:"unauthorized"});
+          //console.log(err)
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
-
+            this.QSetViewInParent({page:"unauthorized"});
         }
+          else if(err?.response?.status===400){
+            alert("You have already entered the daily entry.")
+          }
+
           })
   }  
   render() {
@@ -140,6 +167,7 @@ class AddEntryView extends Component {
                   style={{ fontWeight: 'bold', fontSize: '1.25rem' }}
                   required
                   placeholder='Title'
+                  maxLength={255}
                   onChange={this.QGetTextFromField}
                 />
                 <input
@@ -157,59 +185,64 @@ class AddEntryView extends Component {
                   rows="8"
                   required
                   onChange={this.QGetTextFromField}
-
+                  maxLength={65535} 
                   placeholder={this.state.textareaPlaceholder}
                 ></textarea>
                 <div className="mt-3">
                   <div className="row row-cols-md-auto g-3">
-                    <div className="col-12">
+                    <div className="col-12 formDiv">
                       <input
                         type="number"
                         className="form-control"
                         name="duration"
                         min="0" 
+                        max="1440"
                         placeholder="Duration (minutes)"
                         required
                         onChange={this.QGetTextFromField}
 
                       />
                     </div>
-                    <div className="col-12">
+                    <div className="col-12 formDiv">
                       <input
                         type="number"
                         className="form-control"
                         name="cal_burned"
                         min="0" 
+                        max="50000"
                         placeholder="Calories Burned"
                         required
                         onChange={this.QGetTextFromField}
 
                       />
                     </div>
-                    <div className="col-12">
+                    <div className="col-12 formDiv">
                       <input
                         type="number"
                         className="form-control"
                         name="cal_consumed"
                         min="0" 
+                        max="50000"
                         placeholder="Calories Consumed"
                         required
                         onChange={this.QGetTextFromField}
 
                       />
                     </div>
-                    <div className="col-12">
+                    <div className="col-12 formDiv">
                       <input
                         type="number"
                         className="form-control"
                         name="hours_slept"
+                        max="99.99"
                         onChange={this.QGetTextFromField}
                         min="0" 
+                        
                         placeholder="Hours Slept"
                         required
                       />
                     </div>
-                    <div className="col-12">
+                    <div className="col-12 formDiv">
                       <input
                         type="number"
                         className="form-control"
@@ -218,10 +251,10 @@ class AddEntryView extends Component {
                         placeholder="Water Intake (ml)"
                         required
                         onChange={this.QGetTextFromField}
-
+                        max="999.99"
                       />
                     </div>
-                    <div className="col-12">
+                    <div className="col-12 formDiv">
                       <input
                         type="file"
                         className="form-control"
@@ -230,16 +263,35 @@ class AddEntryView extends Component {
                         onChange={(e) => this.saveImg(e)} 
                         />
                     </div>
-                    <div className="col-12">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="workout_id"
-                        value={this.state.workout.name}
-                        placeholder="Workout"
-                        readOnly
-                      />
-                    </div>
+                    <div className="col-12 formDiv" style={{ position: 'relative', display: 'inline-block' }}>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="workout_id"
+                          value={this.state.workout.name}
+                          placeholder="Workout"
+                          readOnly
+                        />
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          width="22" 
+                          height="22" 
+                          fill="#808080" 
+                          className="bi bi-x"
+                          viewBox="0 0 16 16" 
+                          style={{
+                            position: 'absolute',
+                            top: '55%',
+                            right: '1vw',
+                            transform: 'translateY(-50%)',
+                            cursor: 'pointer'
+                          }}
+                          onClick={this.removeWorkout} 
+                        >
+                          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                      </div>
+
     
                   </div>
                 </div>
@@ -252,7 +304,7 @@ class AddEntryView extends Component {
                 </button>
                 {
                   this.state.showInspoDialog ? (
-                    <div class="modal show" style={{ display: 'block' }}>
+                    <div class="modal show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
                       <div class="modal-dialog modal-sm">
                         <div class="modal-content">
                           <div class="modal-header">

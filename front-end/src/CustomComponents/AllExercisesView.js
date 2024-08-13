@@ -21,7 +21,7 @@ class AllExercisesView extends React.Component {
         })
     })
     .catch(err => {
-      if(err.response.status===401){
+      if(err?.response?.status===401){
         this.QSetHomeInParent();
         this.QSetViewInParent({page:"unauthorized"});
     }
@@ -53,10 +53,13 @@ class AllExercisesView extends React.Component {
           this.setState({exercises:updatedExercises})
         })
         .catch(err=>{
-          console.log(err)
-          if(err.response.status===401){
+          //console.log(err)
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
             this.QSetViewInParent({page:"unauthorized"});
+        }
+        if(err.response.status===404){
+          alert("You tried to delete an admin exercise or there is no exercise to delete.")
         }
         })
     }
@@ -75,7 +78,7 @@ class AllExercisesView extends React.Component {
         })
         .catch(err=>{
           console.log(err)
-          if(err.response.status===401){
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
             this.QSetViewInParent({page:"unauthorized"});
         }
@@ -93,8 +96,8 @@ class AllExercisesView extends React.Component {
           this.setState({ exercises: updatedExercises });
         })
         .catch(err=>{
-          console.log(err)
-          if(err.response.status===401){
+          //console.log(err)
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
             this.QSetViewInParent({page:"unauthorized"});
         }
@@ -113,9 +116,12 @@ class AllExercisesView extends React.Component {
           .then(response=>{
             console.log("Sent to server...")
             console.log(response.status)
+            if(response.status===200){
+              alert("Successfully added exercise.")
+            }
           })
           .catch(err=>{
-            if(err.response.status===401){
+            if(err?.response?.status===401){
               this.QSetHomeInParent();
               this.QSetViewInParent({page:"unauthorized"});
           }
@@ -144,10 +150,14 @@ class AllExercisesView extends React.Component {
             console.log(data)
         })
         .catch(err => {
-          if(err.response.status===401){
+          if(err?.response?.status===401){
             this.QSetHomeInParent();
             this.QSetViewInParent({page:"unauthorized"});
         }
+          else{
+            alert("Unsuccesful adding of the exercise. Try again.")
+
+          }
         })
     }
   render() {
@@ -163,10 +173,10 @@ class AllExercisesView extends React.Component {
               <button className={`nav-link ${activeTab === 'favorites' ? 'active' : ''}`} onClick={() => this.switchTab('favorite')}>Favorite Exercises</button>
             </li>
           </ul>
-        <div className='row'>
+        <div className='row' style={{ position: 'relative'}}>
             <div className='row col-10 col-sm-10 justify-content-center'>
             {data.length > 0 ?
-                    data.map((d, id) => {            
+                    data.slice().reverse().map((d, id) => {            
                 return (<div key={id} className="card col-8 col-sm-4 col-md-4 col-lg-3" style={{ margin: '0.5rem', border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
                 <div className="card-body">
                 <h5 className="card-title">{d.name}</h5>
@@ -222,10 +232,10 @@ class AllExercisesView extends React.Component {
             <div class="dropdown col-2 col-sm-2 mt-3 ms-4">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
   </button>
-  <div class="dropdown-menu dropdown-menu-left mt-1" aria-labelledby="dropdownMenuButton">
+  <div class="dropdown-menu dropdown-menu-left mt-1" id="exercisesDropdown" aria-labelledby="dropdownMenuButton" >
         <div className="container">
                 <h5>Add Exercise</h5>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit} >
                     <div className="form-group">
                     <label htmlFor="exerciseName">Exercise Name</label>
                     <input
@@ -234,6 +244,7 @@ class AllExercisesView extends React.Component {
                         id="exerciseName"
                         name="name"
                         placeholder="Enter exercise name"
+                        maxLength={255}
                         onChange={(e)=>this.QGetTextFromField(e)}
                         required
                     />
@@ -246,6 +257,7 @@ class AllExercisesView extends React.Component {
                         name="description"
                         onChange={(e)=>this.QGetTextFromField(e)}
                         rows="3"
+                        maxLength={2000}
                         placeholder="Enter description"
                     ></textarea>
                     </div>
@@ -256,6 +268,7 @@ class AllExercisesView extends React.Component {
                         className="form-control"
                         id="category"
                         name="category"
+                        maxLength={255}
                         onChange={(e)=>this.QGetTextFromField(e)}
                         placeholder="Enter category"
                     />

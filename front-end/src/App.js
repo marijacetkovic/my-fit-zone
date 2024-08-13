@@ -1,15 +1,12 @@
 import React from 'react'
 import HomeView from './CustomComponents/HomeView';
 import AddEntryView from './CustomComponents/AddEntryView';
-import AddWorkoutView from './CustomComponents/AddWorkoutView';
 import AllExercisesView from './CustomComponents/AllExercisesView';
 import AllWorkoutsView from './CustomComponents/AllWorkoutsView';
 import DiaryView from './CustomComponents/DiaryView';
 import EventView from './CustomComponents/EventView';
 import LoginView from './CustomComponents/LoginView';
 import SignupView from './CustomComponents/SignupView';
-import SingleExerciseView from './CustomComponents/SingleExerciseView';
-import SingleWorkoutView from './CustomComponents/SingleWorkoutView';
 import UserProfileView from './CustomComponents/UserProfileView';
 import SideBarView from './CustomComponents/SideBarView';
 import UnauthorizedView from './CustomComponents/UnauthorizedView';
@@ -22,7 +19,9 @@ class App extends React.Component {
     this.state = {
       isHome:true,
       CurrentPage:"home",
-      user:{}
+      user:{
+        logged:false
+      }
     }
   } 
 
@@ -38,7 +37,7 @@ class App extends React.Component {
         case "home":
             return <HomeView user={this.state.user} QUnSetHomeFromChild={this.QUnSetHome} QIDFromChild={this.QSetView}/>;
         case "diary":
-            return logged ? <DiaryView /> : <UnauthorizedView />;
+            return logged ? <DiaryView QSetHomeFromChild={this.QSetHome} QIDFromChild={this.QSetView}/> : <UnauthorizedView />;
         case "events":
             return logged ? <EventView /> : <UnauthorizedView />;
         case "addentry":
@@ -56,7 +55,7 @@ class App extends React.Component {
         case "unauthorized":
             return <UnauthorizedView QIDFromChild={this.QSetView} />
         default:
-            return <HomeView />;
+            return <HomeView user={this.state.user} />;
     }
 };
 

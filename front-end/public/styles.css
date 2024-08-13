@@ -70,6 +70,20 @@
   .container{
     color:black
   }
+
+#exercisesDropdown{
+  margin-left: -100px !important;
+}  
+
+.background-gray{
+  background-color: rgba(0,0,0,0.5);
+}
+
+.formDiv{
+  width: 25%;
+  max-width: 25%;
+}
+
 /* 
   .diaryCardHeader{
     background-color: #226c6079;

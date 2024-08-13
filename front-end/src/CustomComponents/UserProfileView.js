@@ -27,7 +27,7 @@ class UserProfileView extends React.Component
         })
         .catch(err => {
             console.log(err);
-            if(err.response.status===401){
+            if(err?.response?.status===401){
                 this.QSetHomeInParent();
                 this.QSetViewInParent({page:"unauthorized"});
             }
@@ -84,6 +84,7 @@ class UserProfileView extends React.Component
   render()
   {
     const profile = this.state.userProfile;
+    console.log(profile)
     const user = this.props.user;
     return(<div style={{width:'65vw'}}>
       <div className='mt-5'>      
@@ -95,14 +96,14 @@ class UserProfileView extends React.Component
           src={this.state.profilePicture}
           className="rounded-circle"
           alt="User Avatar"
-          style={{ maxWidth: '200px', maxHeight: '200px' }}
+          style={{ width: '13vw', height: '13vw' }}
         />
       ) : (
         <img
           src="https://via.placeholder.com/100"
           className="rounded-circle"
           alt="User Avatar"
-          style={{ maxWidth: '200px', maxHeight: '200px' }}
+          style={{ width: '13vw', height: '13vw' }}
         />
       )}
     </div>
@@ -142,6 +143,7 @@ class UserProfileView extends React.Component
                   name="height"
                   placeholder={profile.height}
                   onChange={(e) => this.QGetTextFromField(e)}
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -152,6 +154,7 @@ class UserProfileView extends React.Component
                   name="weight"
                   placeholder={profile.weight}
                   onChange={(e) => this.QGetTextFromField(e)}
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -162,6 +165,7 @@ class UserProfileView extends React.Component
                   name="cal_intake"
                   placeholder={profile.cal_intake}
                   onChange={(e) => this.QGetTextFromField(e)}
+                  requireds
                 />
               </div>
               <div className="mb-3">
@@ -171,6 +175,7 @@ class UserProfileView extends React.Component
                   type="file"
                   name="img"
                   onChange={(e) => this.saveImg(e)}
+                  required
                 />
               </div>
               <button type="submit" className="btn btn-primary mt-2 w-100">

@@ -32,11 +32,10 @@ class WorkoutSelectDialog extends React.Component{
             })
         })
         .catch(err => {
-            console.log(err);
-            if(err.response.status===401){
-              this.QSetHomeInParent();
-              this.QSetViewInParent({page:"unauthorized"});
-          }
+          if(err?.response?.status===401){
+            this.QSetHomeInParent();
+            this.QSetViewInParent({page:"unauthorized"});
+        }
         })
       }  
     render(){
