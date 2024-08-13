@@ -56,23 +56,38 @@ entry.post('/', upload_dest.single('file'), async (req, res) => {
 
     //check if users made the daily post 
     //retreive date of last entry from db
-    var currentStreak, maxStreak, totalEntries = 0;
-   // const dateResult = await db.getLastEntryDate(user_id);
-    //const checkedIn = new Date(dateResult[0].date);
-    var checkedIn = new Date();
-    checkedIn.setDate(checkedIn.getDate()+3);
+   // var currentStreak=0, maxStreak=0, totalEntries = 0;
+    const dateResult = await db.getLastEntryDate(user_id);
+    var checkedIn;
+    if (dateResult[0]){
+      checkedIn = new Date(dateResult[0].date);
+    }
+    else{
+        checkedIn = new Date();
+        checkedIn.setDate(checkedIn.getDate()-1);
+    }
+    //var checkedIn = new Date();
+    //checkedIn.setDate(checkedIn.getDate()+3);
     console.log(checkedIn)
     const currentDate = new Date();
     console.log(checkedIn.toDateString())
     console.log(currentDate.toDateString())
     if(checkedIn.toDateString()==currentDate.toDateString()){
         console.log("alr entered daily")
-        return res.status(400).json({message: 'You have already entered the daily journal entry.'})
+        //return res.status(400).json({message: 'You have already entered the daily journal entry.'})
     }
     //check time if days passed without entry, reset streak
     let nextDay = new Date(checkedIn);
     nextDay.setDate(nextDay.getDate() + 1);
 
+    let streakData = await db.getUserStreak(user_id);
+    var { current_streak: currentStreak, max_streak: maxStreak, total_entries: totalEntries } = streakData[0];
+
+    console.log(currentStreak + "lalalalalal")
+    console.log(maxStreak + "lalalalalal")
+    console.log(totalEntries + "lalalalalal")
+
+    //return res.sendStatus(203);
     // if its the next day update, if not then more than 1 day passed
     if (nextDay.toDateString() === currentDate.toDateString()) {
         // update streak
@@ -82,20 +97,21 @@ entry.post('/', upload_dest.single('file'), async (req, res) => {
         console.log("missed streak")
         currentStreak = 1;
     }
-
     if(currentStreak>maxStreak) maxStreak = currentStreak;
     totalEntries++;
-    //save change to db
-    
+    console.log(currentStreak + "lalalalalal")
+    console.log(maxStreak + "lalalalalal")
+    console.log(totalEntries + "lalalalalal")
     const { title,duration, cal_burned, cal_consumed, hours_slept, water_intake, workout_id, event_id, description } = JSON.parse(req.body.data);
     //var event_id = null;
     const image = req.file;
 
     const validEntry = title && duration && cal_burned && cal_consumed && hours_slept && water_intake;
-    
+    const normalizedDuration = `${Math.floor(duration / 60).toString().padStart(2, '0')}:${(duration % 60).toString().padStart(2, '0')}:00`;
+
     if (validEntry) {
         try {
-            var queryResultEntry = await db.addDiaryEntry(title,duration, cal_burned, cal_consumed, 
+            var queryResultEntry = await db.addDiaryEntry(title, normalizedDuration, cal_burned, cal_consumed, 
                 hours_slept, water_intake, image?.filename, description, workout_id, event_id,
                 currentDate, user_id);
             try{

@@ -39,7 +39,7 @@ workout.post('/', async (req, res, next) => {
         
         console.log(queryResultWorkout)
         //workout_id: workout_id, 
-        res.status(201).json({message: 'Workout and exercises added successfully.' });
+        res.status(200).json({message: 'Workout and exercises added successfully.' });
     }
     catch(err){
         console.log(err)
