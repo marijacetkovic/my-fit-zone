@@ -111,6 +111,19 @@ dataPool.updateUserStreak = (id, current_streak, max_streak, total_entries) => {
     );});
 }
 
+
+dataPool.getUserStreak = (id) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT current_streak, max_streak, total_entries FROM UserProfile WHERE user_id = ?`,
+      [id], (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );});
+}
+
+
 dataPool.getUserProfile = (userId) => {
   return new Promise((resolve, reject) => {
     conn.query(

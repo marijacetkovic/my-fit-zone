@@ -29,34 +29,33 @@ users.post('/register', async (req, res, next) => {
             var queryResult = await db.addUser(name, surname, role, email, password);
             if (queryResult.affectedRows === 0) {
                 console.log("unsuccessful registration");
-                return res.sendStatus(404); // unsuccessful
+                return res.status(500).json({message: 'There is an existing user with the provided email. Please proceed to log in.'})
             }
             try{
                 var queryResultProfile = await db.addUserProfile(queryResult.insertId,0,0,0,null,0,0,0);
-                res.json({registration:queryResult,profile:queryResultProfile});
+                res.json({registration:queryResult,profile:queryResultProfile, message:"Registration successful. Please proceed to log in."});
                 console.log("successful registration");
+
             }
             catch(err){
                 console.log(err);
-                res.sendStatus(500);
+                return res.status(500).json({message: 'There is an existing user with the provided email. Please proceed to log in.'})
             }
             //res.sendStatus(200);
         }
         catch(err){
             console.log(err);
-            res.sendStatus(500);
+            return res.status(500).json({message: 'There is an existing user with the provided email. Please proceed to log in.'})
         }
     }
     else{
         console.log("Incomplete request body");
-        res.sendStatus(400);
+        return res.status(400).json({message: 'Please check the required fields.'})
     }
 });
 
 users.post('/login', async (req, res, next) => {
     const {email, password} = req.body;
-    //encrypt passwords?
-    //shouldnt be able to login twice
     if(email && password){
         try{
             var queryResult = await db.authUser(email);
@@ -71,8 +70,12 @@ users.post('/login', async (req, res, next) => {
                     console.log(req.session)
                     res.json(queryResult);
                 }
+                else{
+                     return res.status(500).json({ message: "The password you entered seems to be incorrect. Please try again." })
+                }
             }
-            else return res.sendStatus(500);
+            else return res.status(500).json({ message: "There is no such user for the provided email. Please register." })
+
         }
         catch(err){
             console.log(err);
