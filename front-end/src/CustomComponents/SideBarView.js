@@ -87,7 +87,7 @@ class SideBarView extends React.Component {
             </li>
             <li className="nav-item">
             <a href="#" onClick={() => {this.QSetViewInParent({ page: 'addentry' })}} className={`nav-link py-3 border-bottom rounded-0 ${this.state.active === 'addentry' ? 'active' : ""}`} aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Entry" title="New Entry">
-                <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="24" height="24" role="img" fill="currentColor" class="bi bi-pencil-square" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" role="img" fill="currentColor" className="bi bi-pencil-square"  viewBox="0 0 16 16">
             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
             <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
             </svg>
@@ -95,7 +95,7 @@ class SideBarView extends React.Component {
             </li>
             <li>
             <a href="#" onClick={() => this.QSetViewInParent({ page: 'diary' })} className={`nav-link py-3 border-bottom rounded-0 ${this.state.active === 'diary' ? 'active' : ""}`}  data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Journal" title="Journal">
-                <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="24" height="24" role="img"  fill="currentColor" class="bi bi-journal-richtext" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="24" height="24" role="img"  fill="currentColor"  viewBox="0 0 16 16">
                 <path d="M7.5 3.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m-.861 1.542 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047L11 4.75V7a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 7v-.5s1.54-1.274 1.639-1.208M5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
                 <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
                 <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
@@ -116,7 +116,7 @@ class SideBarView extends React.Component {
             </li>
             <li>
             <a href="#" onClick={() => this.QSetViewInParent({ page: 'events' })} className={`nav-link py-3 border-bottom rounded-0 ${this.state.active === 'events' ? 'active' : ""}`}  data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Events" title="Events">
-                <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="24" height="24" role="img" aria-label="Events" fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" className="bi pe-none" width="24" height="24" role="img" aria-label="Events" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
                 </svg>

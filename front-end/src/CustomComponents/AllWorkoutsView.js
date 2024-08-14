@@ -127,7 +127,7 @@ class AllWorkoutsView extends React.Component{
               this.QSetViewInParent({page:"unauthorized"});
             }
             else{
-              alert("Unsuccesful adding of the workout. Try again.")
+              alert("Unsuccesful adding of the workout. Do not repeat exercises within one workout.")
             }
             })
     }  
@@ -176,13 +176,13 @@ class AllWorkoutsView extends React.Component{
         <div className='row'>
             <div className='row col-10 col-sm-10 justify-content-center'>
             { data.length>0 ? 
-            data.slice().reverse().map((d)=> (
-            <WorkoutCard workoutData={d} class="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2" delete={true}
+            data.slice().reverse().map((d,id)=> (
+            <WorkoutCard key={id} workoutData={d} cardClass="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2" delete={true}
             handleDelete={this.handleWorkoutDelete}/>))
             : "No workouts to display."}
             </div>
-            <div class="dropdown col-2 col-sm-2 mt-3 ms-4">
-  <button class="btn btn-secondary dropdown-toggle" type="button" onClick={this.toggleDialog}>
+            <div className="dropdown col-2 col-sm-2 mt-3 ms-4">
+  <button className="btn btn-secondary dropdown-toggle" type="button" onClick={this.toggleDialog}>
   </button>
         {
             this.state.showDialog ? (
@@ -220,7 +220,7 @@ class AllWorkoutsView extends React.Component{
                                         className="form-select" 
                                         required
                                         onChange={(event) => this.QGetValueFromSelect(event, id)}                                    >
-                                        <option value="" disabled selected>Exercise {id+1}</option>
+                                        <option value="" disabled>Exercise {id+1}</option>
                                         {exerciseData.length > 0 ? (
                                         exerciseData.map((exercise) => (
                                             <option key={exercise.id} value={exercise.id}>

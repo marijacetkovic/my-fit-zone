@@ -26,7 +26,6 @@ class UserProfileView extends React.Component
             })
         })
         .catch(err => {
-            console.log(err);
             if(err?.response?.status===401){
                 this.QSetHomeInParent();
                 this.QSetViewInParent({page:"unauthorized"});
@@ -165,7 +164,7 @@ class UserProfileView extends React.Component
                   name="cal_intake"
                   placeholder={profile.cal_intake}
                   onChange={(e) => this.QGetTextFromField(e)}
-                  requireds
+                  required
                 />
               </div>
               <div className="mb-3">

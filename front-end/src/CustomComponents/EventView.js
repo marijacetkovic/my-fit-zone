@@ -37,7 +37,7 @@ class EventView extends React.Component
         <div className='container'>
             <div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3'>
         {data.length>0 ? data.map((d,id) => {return(
-            <div className="col">
+            <div key={id} className="col">
              <div className="card shadow-sm" key={d.id}>
              <img src={this.state.eventImages[id]} className="card-img-top" 
               style={{ width: '100%', height: '225px', objectFit: 'cover' }} />
