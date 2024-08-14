@@ -251,7 +251,7 @@ class AddEntryView extends Component {
                         placeholder="Water Intake (ml)"
                         required
                         onChange={this.QGetTextFromField}
-                        max="999.99"
+                        max="99999.99"
                       />
                     </div>
                     <div className="col-12 formDiv">

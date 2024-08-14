@@ -9,19 +9,19 @@ class DiaryDetailsCard extends React.Component {
         <div className="card-body">
           <div className="">
             <div className="">
-              <strong>Duration:</strong> {diaryDetails.duration}
+              <strong>Duration:</strong> {diaryDetails.duration} 
             </div>
             <div className="">
-              <strong>Calories Burned:</strong> {diaryDetails.cal_burned}
+              <strong>Calories Burned:</strong> {diaryDetails.cal_burned} kcal
             </div>
             <div className="">
-              <strong>Calories Consumed:</strong> {diaryDetails.cal_consumed}
+              <strong>Calories Consumed:</strong> {diaryDetails.cal_consumed} kcal
             </div>
             <div className="">
-              <strong>Hours Slept:</strong> {diaryDetails.hours_slept}
+              <strong>Hours Slept:</strong> {diaryDetails.hours_slept} hr
             </div>
             <div className="">
-              <strong>Water Intake:</strong> {diaryDetails.water_intake}
+              <strong>Water Intake:</strong> {diaryDetails.water_intake} ml
             </div>
           </div>
         </div>
