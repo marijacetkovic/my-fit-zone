@@ -35,6 +35,15 @@
   background-color: #2d796c;
   border: none;
 }
+.btn-secondary:active{
+  background-color: #6a968e;
+  border: none;
+}
+.btn-secondary:focus{
+  background-color: #2d796c;
+  border: none;
+  box-shadow: 0 0 0 0.2rem rgba(34, 108, 96, 0.3) !important; 
+}
 
 .nav-link{
   color: #62b2a5
@@ -50,7 +59,7 @@
 .wk-icon:hover .wk-path, .ex-icon:hover .ex-path {
   fill: #2d796c; 
 }
-.form-control:focus{
+.form-control:focus, .form-select:focus{
   border: none !important;
   box-shadow: 0 0 0 0.2rem rgba(34, 108, 96, 0.3) !important; 
 }
@@ -63,6 +72,12 @@
     background-color: #226c60 !important; 
     border-color: #226c60 !important;    
   }
+
+.btn-primary:active {
+  color: white;
+  background-color: #517e76 !important; 
+  border-color: #517e76 !important;   
+}  
   body{
     background-color: black;
     color:white;

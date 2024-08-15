@@ -220,7 +220,7 @@ class AllWorkoutsView extends React.Component{
                                         className="form-select" 
                                         required
                                         onChange={(event) => this.QGetValueFromSelect(event, id)}                                    >
-                                        <option value="" disabled>Exercise {id+1}</option>
+                                        <option value="" disabled selected>Exercise {id+1}</option>
                                         {exerciseData.length > 0 ? (
                                         exerciseData.map((exercise) => (
                                             <option key={exercise.id} value={exercise.id}>

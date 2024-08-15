@@ -115,7 +115,8 @@ class AllExercisesView extends React.Component {
         axios.post('http://88.200.63.148:1046/exercise/',{
             name:this.state.exercise.name,
             description:this.state.exercise.description,
-            category:this.state.exercise.category
+            category:this.state.exercise.category,
+            video_url:this.state.exercise.video_url
           },  { withCredentials: true })
           .then(response=>{
             console.log("Sent to server...")
@@ -176,7 +177,8 @@ class AllExercisesView extends React.Component {
     var data = this.state.exercises;
     const { activeTab, searchQuery } = this.state;
      data = data.filter(d => 
-      d.name.toLowerCase().includes(searchQuery.toLowerCase())
+      d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.category.toLowerCase().includes(searchQuery.toLowerCase())
     );
     return(
       <div className='container'>
@@ -276,6 +278,18 @@ class AllExercisesView extends React.Component {
                         maxLength={2000}
                         placeholder="Enter description"
                     ></textarea>
+                    </div>
+                    <div className="form-group">
+                    <label htmlFor="category">YouTube video url</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="video"
+                        name="video_url"
+                        maxLength={255}
+                        onChange={(e)=>this.QGetTextFromField(e)}
+                        placeholder="Enter YouTube video url"
+                    />
                     </div>
                     <div className="form-group">
                     <label htmlFor="category">Category</label>
