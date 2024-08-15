@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios';
 import { API_URL } from '../Utils/Configuration';
+import SearchBar from './SearchBar';
 
 class AllExercisesView extends React.Component {
   constructor(props){
@@ -9,8 +10,11 @@ class AllExercisesView extends React.Component {
         update:false,
         exercises:[],
         activeTab: 'all',
-        cardId:null
+        cardId:null,
+        searchQuery: ""
     }
+    this.handleSearch = this.handleSearch.bind(this);
+
   }
   componentDidMount(){
     axios.get(API_URL+'/exercise', { withCredentials: true })
@@ -159,10 +163,21 @@ class AllExercisesView extends React.Component {
 
           }
         })
+
+        this.setState({
+          searchQuery:""
+        })
     }
+
+  handleSearch(query) {
+    this.setState({ searchQuery: query });
+  }
   render() {
-    const data = this.state.exercises;
-    const activeTab = this.state.activeTab;
+    var data = this.state.exercises;
+    const { activeTab, searchQuery } = this.state;
+     data = data.filter(d => 
+      d.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     return(
       <div className='container'>
          <ul className="nav nav-tabs" style={{width:"80%"}}>
@@ -173,6 +188,7 @@ class AllExercisesView extends React.Component {
               <button className={`nav-link ${activeTab === 'favorite' ? 'active' : ''}`} onClick={() => this.switchTab('favorite')}>Favorite Exercises</button>
             </li>
           </ul>
+          <SearchBar onSearch={this.handleSearch} />
         <div className='row' style={{ position: 'relative'}}>
             <div className='row col-10 col-sm-10 justify-content-center'>
             {data.length > 0 ?
