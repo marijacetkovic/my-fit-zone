@@ -1,4 +1,4 @@
-# MyFitZone
+# Fitness Information System: MyFitZone
 
 In today's health-conscious world, maintaining an active lifestyle is more important than ever. With the increasing emphasis on personal fitness and well-being, individuals are seeking innovative ways to track and manage their fitness journeys. MyFitZone is an Information System designed to meet this demand by providing users with an intuitive and interactive platform to document their fitness activities, track progress, and stay motivated, accompanied by a user-friendly modern and minimalistic interface.
 
@@ -32,15 +32,17 @@ MyFitZone serves as a personal fitness management system, offering users the abi
 
 ### Exercise Management
 
-- **Add Exercise:** Users can add new exercises by providing details such as exercise name, video URL, description, and category. Personal exercises are only visible to the user who added them, while admin exercises are available to all users.
 - **View Exercises:** Users can view the list of exercises, including those added by admins and themselves.
+- **Add Exercise:** Users can add new exercises by providing details such as exercise name, video URL, description, and category. Personal exercises are only visible to the user who added them, while admin exercises are available to all users.
 - **Delete Exercise:** Users can delete their exercises from the database.
 - **Set Exercise as Favorite:** Users can mark exercises as favorites for easier access.
+- **Search Exercises:** Users can search exercises by their name or category.
 
 ### Workout Management
 
 - **View Workouts:** Users can browse available workouts, including workout names, descriptions, and the exercises included.
 - **Add Workouts:** Users can create customized workouts by dynamically selecting exercises from the existing exercise library and specifying the number of sets and reps.
+- **Delete Workouts:** Users can delete workouts they do not want in their database anymore.
 
 ### Activity Tracking by Streak Calculation
 
