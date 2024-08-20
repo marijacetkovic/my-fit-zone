@@ -47,8 +47,6 @@ entry.get('/', async (req, res, next)=>{
 });
 
 entry.post('/', upload_dest.single('file'), async (req, res) => {
-    console.log("log")
-    console.log(req.file)
      if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User is not logged in." })
     }
@@ -56,7 +54,6 @@ entry.post('/', upload_dest.single('file'), async (req, res) => {
 
     //check if users made the daily post 
     //retreive date of last entry from db
-   // var currentStreak=0, maxStreak=0, totalEntries = 0;
     const dateResult = await db.getLastEntryDate(user_id);
     var checkedIn;
     if (dateResult[0]){
@@ -66,15 +63,12 @@ entry.post('/', upload_dest.single('file'), async (req, res) => {
         checkedIn = new Date();
         checkedIn.setDate(checkedIn.getDate()-1);
     }
-    //var checkedIn = new Date();
-    //checkedIn.setDate(checkedIn.getDate()+3);
-    console.log(checkedIn)
+   
     const currentDate = new Date();
     console.log(checkedIn.toDateString())
     console.log(currentDate.toDateString())
     if(checkedIn.toDateString()==currentDate.toDateString()){
-        console.log("alr entered daily")
-        //return res.status(400).json({message: 'You have already entered the daily journal entry.'})
+        return res.status(400).json({message: 'You have already entered the daily journal entry.'})
     }
     //check time if days passed without entry, reset streak
     let nextDay = new Date(checkedIn);
@@ -83,10 +77,6 @@ entry.post('/', upload_dest.single('file'), async (req, res) => {
     let streakData = await db.getUserStreak(user_id);
     var { current_streak: currentStreak, max_streak: maxStreak, total_entries: totalEntries } = streakData[0];
 
-    console.log(currentStreak + "lalalalalal")
-    console.log(maxStreak + "lalalalalal")
-    console.log(totalEntries + "lalalalalal")
-
     //return res.sendStatus(203);
     // if its the next day update, if not then more than 1 day passed
     if (nextDay.toDateString() === currentDate.toDateString()) {
@@ -94,16 +84,12 @@ entry.post('/', upload_dest.single('file'), async (req, res) => {
         currentStreak++;
     } else {
         // more than one day passed reset streak
-        console.log("missed streak")
         currentStreak = 1;
     }
     if(currentStreak>maxStreak) maxStreak = currentStreak;
     totalEntries++;
-    console.log(currentStreak + "lalalalalal")
-    console.log(maxStreak + "lalalalalal")
-    console.log(totalEntries + "lalalalalal")
+    
     const { title,duration, cal_burned, cal_consumed, hours_slept, water_intake, workout_id, event_id, description } = JSON.parse(req.body.data);
-    //var event_id = null;
     const image = req.file;
 
     const validEntry = title && duration && cal_burned && cal_consumed && hours_slept && water_intake;

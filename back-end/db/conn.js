@@ -77,16 +77,28 @@ dataPool.addUserProfile=(id,height,weight,cal_intake,img,
   })
 }
 //update profile needed
-dataPool.updateUserProfile = (id, height, weight, cal_intake, img) => {
+dataPool.updateUserProfile = (id, height, weight, cal_intake) => {
   return new Promise((resolve, reject) => {
     conn.query(
-      `UPDATE UserProfile SET height = ?, weight = ?, cal_intake = ?, img = ? WHERE user_id = ?`,
-      [height, weight, cal_intake, img, id], (err, res) => {
+      `UPDATE UserProfile SET height = ?, weight = ?, cal_intake = ? WHERE user_id = ?`,
+      [height, weight, cal_intake, id], (err, res) => {
         if (err) return reject(err);
         return resolve(res);
       }
     );});
 }
+
+dataPool.updateUserProfileImage = (id, img) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `UPDATE UserProfile SET img = ? WHERE user_id = ?`,
+      [img, id], (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );
+  });
+};
 
 dataPool.getUserStreak = (id) => {
   return new Promise((resolve, reject) => {
@@ -408,7 +420,7 @@ dataPool.removeFavoriteExercise = (user_id, exercise_id) => {
 dataPool.getUserFavoriteExercises = (user_id) => {
   return new Promise((resolve, reject) => {
     const query = `
-    SELECT Exercise.id, Exercise.name
+    SELECT Exercise.id, Exercise.name, Exercise.category, Exercise.description, Exercise.video_url
     FROM FavoriteExercise 
     JOIN Exercise ON FavoriteExercise.exercise_id = Exercise.id 
     WHERE FavoriteExercise.user_id = ?

@@ -144,12 +144,42 @@ users.get('/profile', async (req, res, next) => {
     }
 })
 
-users.post('/profile', upload_dest.single('file'), async (req, res, next) => {
-    //bmi calculation???
-    const {height, weight, cal_intake} =  JSON.parse(req.body.data);
-    const bmi = bmiCalc(height, weight);
+users.post('/profilepicture', upload_dest.single('file'), async (req, res, next) => {
     const img = req.file;
+    console.log(img)
     
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "User not logged in" })
+    }
+    
+    const user_id = req.session.user.user_id;
+
+    if(img){
+        try{
+            var queryResult = await db.updateUserProfileImage(user_id, 
+                img?.filename);
+            if (queryResult.affectedRows === 0) {
+                console.log("unsuccessful user profile img");
+                return res.sendStatus(404); // unsuccessful
+            }
+            res.json(queryResult);
+        }
+        catch(err){
+            console.log(err);
+            res.sendStatus(500);
+        }
+    }
+    else{
+        console.log("Incomplete request body");
+        res.sendStatus(400);
+    }
+});
+
+
+users.post('/profile', async (req, res, next) => {
+    //bmi calculation???
+    const {height, weight, cal_intake} =  req.body;
+
     if (!req.session || !req.session.user) {
         return res.status(401).json({ message: "User not logged in" })
     }
@@ -159,7 +189,7 @@ users.post('/profile', upload_dest.single('file'), async (req, res, next) => {
     if(height && weight){
         try{
             var queryResult = await db.updateUserProfile(user_id, height, weight, 
-                cal_intake, img?.filename);
+                cal_intake);
             if (queryResult.affectedRows === 0) {
                 console.log("unsuccessful user profile creation");
                 return res.sendStatus(404); // unsuccessful
