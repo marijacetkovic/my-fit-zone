@@ -57,5 +57,5 @@ MyFitZone serves as a personal fitness management system, offering users the abi
 
 
 ## Links
-- **Demo Video:**
-- **Live Application:**
+- **Demo Video:** https://youtu.be/MF_PLFDbYQk
+- **Live Application:** http://88.200.63.148:1046
