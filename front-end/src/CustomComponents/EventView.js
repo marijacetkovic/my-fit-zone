@@ -13,8 +13,13 @@ class EventView extends React.Component
               'https://wpamelia.com/wp-content/uploads/2021/09/launch.jpg',
               'https://media.wired.com/photos/5cae8365eaad993a02ff5d1c/master/pass/bostonmarathon-947031426.jpg',
               'https://treeoflifenutrition.com.au/wp-content/uploads/2024/02/workplace-or-corporate-nutrition-seminars.jpg',
-              'https://cdn.outsideonline.com/wp-content/uploads/2017/08/08/amateur-cyclists-mt-evans-colorado_s.jpg'
-              ]
+              'https://cdn.outsideonline.com/wp-content/uploads/2017/08/08/amateur-cyclists-mt-evans-colorado_s.jpg',
+              'https://media.self.com/photos/628e481b77d608f44f5f5abe/4:3/w_1920,c_limit/what-is-pilates.jpeg',
+              'https://tunturi.org/Blogs/2021-08/bootcamp-full-body-workout.jpg',
+              'https://www.verywellmind.com/thmb/lmjACRUlHuZcHijdfo5dYplWQro=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-539661087-58d2e5e65f9b5846830df9aa.jpg',
+              'https://www.growinnsteps.com/wp-content/uploads/2022/06/dancer-zumba-fitness-training-dance-studio-scaled-1.jpg'
+              
+            ]
         }
       }
       componentDidMount(){
@@ -37,7 +42,7 @@ class EventView extends React.Component
         <div className='container'>
             <div className='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3'>
         {data.length>0 ? data.map((d,id) => {return(
-            <div className="col">
+            <div key={id} className="col">
              <div className="card shadow-sm" key={d.id}>
              <img src={this.state.eventImages[id]} className="card-img-top" 
               style={{ width: '100%', height: '225px', objectFit: 'cover' }} />
@@ -47,7 +52,7 @@ class EventView extends React.Component
                <p className="card-text">{d.description}</p>
                <div className="d-flex justify-content-between align-items-center">
                  <div className="btn-group">
-                   <button type="button" className="btn btn-sm btn-outline-secondary">Sign Up</button>
+                   <button type="button" onClick={()=>{alert("Successfully signed up for the event "+d.name+".")}} className="btn btn-sm btn-outline-secondary">Sign Up</button>
                  </div>
                  <small className="text-body-secondary text-muted">{d.time}, {d.location}</small>
                </div>

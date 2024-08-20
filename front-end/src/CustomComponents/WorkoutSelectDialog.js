@@ -41,20 +41,23 @@ class WorkoutSelectDialog extends React.Component{
     render(){
         const data = this.state.workouts;
         return(
+        
             <div>
-                 <div class="modal show" style={{ display: 'block' }}>
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5 text-black" id="exampleModalLabel">Choose a workout</h1>
+                 <div className="modal show" style={{ display: 'block' }}>
+  <div className="modal-dialog modal-xl">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h1 className="modal-title fs-5 text-black" id="exampleModalLabel">Choose a workout</h1>
+        <button onClick={this.props.onClose} type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+        </button>
       </div>
-      <div class="modal-body">
+      <div className="modal-body">
       <div className='row justify-content-center'>
             { data.length>0 ? 
             data.map((d)=> (
             <WorkoutCard handleSelect={this.handleWorkoutSelect} 
             closeDialog={this.props.onClose}
-            workoutData={d} class="card col-10 col-sm-2 col-md-2 col-lg-2 mx-2 my-2"/>))
+            workoutData={d} cardClass="card col-10 col-sm-2 col-md-2 col-lg-2 mx-2 my-2"/>))
             : ""}
             </div>
       </div>
