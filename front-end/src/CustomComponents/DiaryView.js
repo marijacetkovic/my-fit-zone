@@ -114,7 +114,7 @@ class DiaryView extends React.Component
         )}
         )
       : 
-      <div style={{color:"white", textAlign:"center"}}>No entries to display. You can start by adding your first diary entry.</div>}
+      <div className='mt-4' style={{color:"white", textAlign:"center"}}>No entries to display. You can start by adding your first diary entry.</div>}
       
     </div>
   </div>

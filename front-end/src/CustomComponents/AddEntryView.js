@@ -50,14 +50,6 @@ class AddEntryView extends Component {
     .catch(err => {
         //console.log(err);
     })
-
-    // initialize tooltips
-    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltipTriggerEl => {
-        new window.bootstrap.Tooltip(tooltipTriggerEl, {
-          trigger: 'hover' 
-        });
-    });
-
     this.setState({
       prompts: this.getJournalPrompts()
     })
@@ -111,9 +103,22 @@ class AddEntryView extends Component {
     handleSubmit = (e) => {
       e.preventDefault();
       const formData = this.state.img;
+      //console.log(formData.get('file').type)
+      
+
+      if (formData?.get('file')) {
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (!validImageTypes.includes(formData.get('file').type)) {
+          alert('Please select a valid image file (jpeg, jpg,png).');
+          this.setState({
+            img:''
+          })
+          return;
+        }
+      }
 
       const requestData = {
-        title: this.state.entry.duration,
+        title: this.state.entry.title,
         duration: this.state.entry.duration,
         cal_burned: this.state.entry.cal_burned,
         cal_consumed: this.state.entry.cal_consumed,
@@ -132,6 +137,7 @@ class AddEntryView extends Component {
           )
           .then(response=>{
           console.log("Sent to server...")
+          console.log("it is")
           console.log(response)
           
           if(response.status===200){
@@ -248,16 +254,17 @@ class AddEntryView extends Component {
                         className="form-control"
                         name="water_intake"
                         min="0" 
-                        placeholder="Water Intake (ml)"
+                        placeholder="Water Intake (l)"
                         required
                         onChange={this.QGetTextFromField}
-                        max="99999.99"
+                        max="99.99"
                       />
                     </div>
                     <div className="col-12 formDiv">
                       <input
                         type="file"
                         className="form-control"
+                        accept=".jpg,.jpeg,.png" 
                         name="image"
                         placeholder="Image"
                         onChange={(e) => this.saveImg(e)} 
@@ -297,7 +304,10 @@ class AddEntryView extends Component {
                 </div>
                 </div>
               <div className="card-footer text-right">
-              <button className="btn btn-primary me-2" onClick={()=>{this.setState({showInspoDialog:true})}} data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Get inspired" title="Inspiration">
+              <button className="btn btn-primary me-1" data-bs-custom-class="custom-tooltip"  onClick={(e)=>{
+                e.preventDefault();
+                this.setState({showInspoDialog:true})
+                }} data-bs-toggle="tooltip2"  data-bs-placement="top" aria-label="Get inspired" title="Inspiration">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-lightbulb" viewBox="0 0 16 16">
               <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"/>
                </svg>
@@ -326,13 +336,13 @@ class AddEntryView extends Component {
                     </div>
                   ) : ""
                 }
-                <button type="submit" className="btn btn-primary me-2"  data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Save" title="Save" >
+                <button type="submit" className="btn btn-primary me-1" data-bs-custom-class="custom-tooltip"  data-bs-toggle="tooltip2" data-bs-placement="top" aria-label="Save" title="Save" >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-floppy" viewBox="0 0 16 16">
                   <path d="M11 2H9v3h2z"/>
                   <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
                 </svg>
                 </button>
-                <button type="button" className="btn btn-primary" onClick={()=>{this.setState({showDialog:true})}}  data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Add Workout" title="Add Workout" >
+                <button type="button" className="btn btn-primary" data-bs-custom-class="custom-tooltip" onClick={()=>{this.setState({showDialog:true})}}  data-bs-toggle="tooltip2" data-bs-placement="top" aria-label="Add Workout" title="Add Workout" >
                 <svg xmlns="http://www.w3.org/2000/svg" className="bi wk-icon" width="20" height="20" role="img"  viewBox="0 0 640 512">
                 <path fill="#ffffff" d="M96 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32V224v64V448c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V384H64c-17.7 0-32-14.3-32-32V288c-17.7 0-32-14.3-32-32s14.3-32 32-32V160c0-17.7 14.3-32 32-32H96V64zm448 0v64h32c17.7 0 32 14.3 32 32v64c17.7 0 32 14.3 32 32s-14.3 32-32 32v64c0 17.7-14.3 32-32 32H544v64c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32V288 224 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32zM416 224v64H224V224H416z"/></svg>
                 </button>

@@ -37,16 +37,26 @@ class UserProfileView extends React.Component
       const data = new FormData();
       data.append('file', event.target.files[0]);
       this.setState({img:data})
-      try {
-        const response = axios.post(API_URL+'/users/profilepicture', data, {
-          withCredentials: true 
-        });
-        console.log('Profile picture updated successfully:', response.data);
-        return response.data;
-      } catch (error) {
-        console.log(error);
-        
+      
+      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!validImageTypes.includes(data.get('file').type)) {
+        alert('Please select a valid image file (jpeg, jpg,png).');
+        this.setState({
+          img:''
+        })
+        return;
       }
+      
+      axios.post(API_URL+'/users/profilepicture', data, {
+        withCredentials: true 
+      }).then(response => {
+        if(response.status===200){
+          alert("Picture successfully updated. Reload the profile to see the changes.")
+        }
+      }).catch(err=>{
+        console.log(err)
+      });
+      
     }
 
   QGetTextFromField=(e)=>{
@@ -120,6 +130,7 @@ class UserProfileView extends React.Component
   <input
     id="file-input"
     type="file"
+    accept=".jpg,.jpeg,.png" 
     style={{ display: 'none' }}
     onChange={(e) => this.saveImg(e)}
   />

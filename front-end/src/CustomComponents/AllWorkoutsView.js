@@ -16,7 +16,7 @@ class AllWorkoutsView extends React.Component{
             }],
             exerciseData: [],
             showDialog:false,
-            exerciseLimit:5,
+            exerciseLimit:9,
             update:false
         }
 
@@ -179,7 +179,7 @@ class AllWorkoutsView extends React.Component{
             data.slice().reverse().map((d,id)=> (
             <WorkoutCard key={id} workoutData={d} cardClass="card col-10 col-sm-3 col-md-3 col-lg-3 mx-2 my-2" delete={true}
             handleDelete={this.handleWorkoutDelete}/>))
-            : "No workouts to display."}
+            : <div className='mt-4 text-center'>No workouts to display.</div>}
             </div>
             <div className="dropdown col-2 col-sm-2 mt-3 ms-4">
   <button className="btn btn-secondary dropdown-toggle" type="button" onClick={this.toggleDialog}>

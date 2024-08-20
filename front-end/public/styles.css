@@ -94,11 +94,28 @@
   background-color: rgba(0,0,0,0.5);
 }
 
-.formDiv{
-  width: 25%;
-  max-width: 25%;
+@media (min-width: 800px) { 
+  .formDiv {
+    width: 25%;
+    max-width: 25%;
+  }
 }
 
+
+.tooltip-inner {
+  background-color: #5fa89c;
+  color: #fff; 
+}
+
+.tooltip .tooltip-arrow::before {
+  
+  border-left-color: #5fa89c;  
+  border-right-color: #5fa89c; 
+}
+.dropdown-item:active,
+.dropdown-item.active {
+  background-color: #5fa89c;
+}
 /* 
   .diaryCardHeader{
     background-color: #226c6079;

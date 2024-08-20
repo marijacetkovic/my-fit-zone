@@ -52,7 +52,7 @@ class EventView extends React.Component
                <p className="card-text">{d.description}</p>
                <div className="d-flex justify-content-between align-items-center">
                  <div className="btn-group">
-                   <button type="button" className="btn btn-sm btn-outline-secondary">Sign Up</button>
+                   <button type="button" onClick={()=>{alert("Successfully signed up for the event "+d.name+".")}} className="btn btn-sm btn-outline-secondary">Sign Up</button>
                  </div>
                  <small className="text-body-secondary text-muted">{d.time}, {d.location}</small>
                </div>
