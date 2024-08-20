@@ -420,7 +420,7 @@ dataPool.removeFavoriteExercise = (user_id, exercise_id) => {
 dataPool.getUserFavoriteExercises = (user_id) => {
   return new Promise((resolve, reject) => {
     const query = `
-    SELECT Exercise.id, Exercise.name, Exercise.category
+    SELECT Exercise.id, Exercise.name, Exercise.category, Exercise.description, Exercise.video_url
     FROM FavoriteExercise 
     JOIN Exercise ON FavoriteExercise.exercise_id = Exercise.id 
     WHERE FavoriteExercise.user_id = ?
